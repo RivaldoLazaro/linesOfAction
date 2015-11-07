@@ -160,14 +160,10 @@ class Game {
                     continue;
                 }
                 next = _players[playerInd].makeMove();
+                assert !_playing || next != null;
             } else {
                 getMove();
                 next = null;
-            }
-            if (_playing) {
-                announceWinner();
-                _playing = false;
-                continue;
             }
             if (next != null) {
                 assert _board.isLegal(next);
