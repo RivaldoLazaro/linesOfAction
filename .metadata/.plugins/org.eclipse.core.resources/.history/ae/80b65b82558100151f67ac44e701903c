@@ -1,0 +1,47 @@
+1a. Results for InsertRandomSpeedTest for N = 1000000:
+
+Inserting 1000000 random length 10 Strings into a StringSet of type BSTStringSet
+Took: 1.27 sec.
+
+Inserting 1000000 random length 10 Strings into a StringSet of type ECHashStringSet
+Took: 1.21 sec.
+
+Inserting 1000000 random length 10 Strings into a StringSet of type java.util.TreeSet
+Took: 1.23 sec.
+
+Inserting 1000000 random length 10 Strings into a StringSet of type java.util.HashSet
+Took: 0.45 sec.
+
+
+1b. Results for InsertRandomSpeedTest for N = 2000000:
+
+Inserting 2000000 random length 10 Strings into a StringSet of type BSTStringSet
+Took: 2.66 sec.
+
+Inserting 2000000 random length 10 Strings into a StringSet of type ECHashStringSet
+Took: 2.26 sec.
+
+Inserting 2000000 random length 10 Strings into a StringSet of type java.util.TreeSet
+Took: 2.76 sec.
+
+Inserting 2000000 random length 10 Strings into a StringSet of type java.util.HashSet
+Took: 1.07 sec.
+
+
+
+1c. Does your ECHashStringSet look roughly linear or roughly quadratic in its scaling behavior for random strings?
+
+roughly linear
+
+
+2a. Results for InsertInOrderSpeedTest for N = 10000:
+
+
+2b. Results for InsertInOrderSpeedTest for N = 20000:
+
+
+2c. Does your **BST**StringSet look roughly linear or roughly quadratic in its scaling behavior for in order strings? 
+
+
+Before submitting, make sure that your ECHashStringSet is capable of handling inputs of size 1000000 in a reasonable amount of time (less than a minute).
+

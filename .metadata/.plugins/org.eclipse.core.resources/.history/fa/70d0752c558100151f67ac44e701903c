@@ -1,0 +1,100 @@
+/** Implementation of the class BSTStringSet.
+ *  @author Tim Chan
+ */
+public class BSTStringSet implements StringSet {
+	
+	private class Node {
+		/** String stored by this Tree. */
+		private String sp;
+		/** Left sub-tree. */
+		private Node left = null;
+		/** Right sub-tree. */
+		private Node right = null;
+		
+		/** Creates a new Node containing the given string SP. */
+        public Node(String sp) {
+        	this.sp = sp;
+        }
+	}
+	
+	/** Root node of a tree. */
+	private Node _root;
+
+	/** Empty StringSet. */
+	public BSTStringSet() {
+		_root = null;
+	}
+	
+	/** Helper function to attach S. */
+	private Node put_2(Node nd, String s) {
+		if (nd == null) {
+			return new Node(s);
+		}
+		if(s.compareTo(nd.sp) > 0) {
+			nd.right = put_2(nd.right, s);
+		} else { 
+			nd.left = put_2(nd.left, s);
+		}
+		return nd;
+	}
+	
+	@Override
+	public void put(String s) {
+		if(contains(s)) {
+			return;
+		}
+		_root = put_2(this._root, s);
+	}
+
+
+
+	/** Helper function Check if Node ND any node below contain S. */
+	private boolean contains_2(Node nd, String s) {
+		if(nd == null) {
+			return false;
+		} else if(nd.sp.equals(s)) {
+			return true;
+		} else if(s.compareTo(nd.sp) > 0) {
+			return contains_2(nd.right, s);
+		} else {
+			return contains_2(nd.left, s);
+		}
+	}
+	
+	@Override
+	public boolean contains(String s) {
+		return contains_2(this._root, s);
+	}
+	
+	
+	/** Prints the Set in increasing order. */
+    public void printSet() {
+        printInOrder(_root);
+        System.out.println();
+    }
+
+    /** Helper method that prints BST rooted in ND. */
+    private void printInOrder(Node nd) {
+        if (nd == null) {
+            return;
+        }
+
+        printInOrder(nd.left);
+        System.out.print(nd.sp + " ");
+        printInOrder(nd.right);
+    }
+    
+    @Override
+    public String toString(){
+		return toString_2(this._root);  	
+    }
+    
+    /** Helper method that convert Node to String. */
+    private String toString_2(Node nd) {
+        if (nd == null) {
+            return "";
+        }
+        return toString_2(nd.left) + nd.sp + " " + toString_2(nd.right);
+    }
+
+}

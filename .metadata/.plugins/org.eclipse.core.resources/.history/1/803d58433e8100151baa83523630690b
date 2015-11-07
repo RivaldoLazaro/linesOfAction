@@ -1,0 +1,53 @@
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class ECHashStringSet {
+
+	/**Test empty constructor. */
+	@Test
+	public void testECHashStringSet() {
+		StringSet test = new ECHashStringSet();
+	}
+	
+	/**Test put method. */
+	@Test
+	public void testPut() {
+		StringSet test = new ECHashStringSet();
+		test.put("Bumfuzzle");
+		test.put("Cattywampus");
+		test.put("Gardyloo");
+		test.put("Taradiddle");
+		test.put("Billingsgate");
+		test.put("Snickersnee");
+		test.put("Widdershins");
+		test.put("Collywobbles");
+		test.put("Gubbins");
+		test.put("Diphthong");
+		test.put("Diphthong");
+		test.put("Diphthong");
+		test.put("Diphthong");
+		test.put("Diphthong");
+		assertEquals("Billingsgate Bumfuzzle Cattywampus Collywobbles Diphthong Gardyloo Gubbins Snickersnee Taradiddle Widdershins ".equals(test.toString()), true);
+	}
+	
+	/**Test contains method. */
+	@Test
+	public void testContains() {
+		StringSet test = new ECHashStringSet();
+		test.put("Bumfuzzle");
+		test.put("Cattywampus");
+		test.put("Gardyloo");
+		test.put("Taradiddle");
+		test.put("Billingsgate");
+		test.put("Snickersnee");
+		test.put("Widdershins");
+		test.put("Collywobbles");
+		assertEquals(test.contains("Cattywampus"), true);
+		assertEquals(test.contains("Nirvana"), false);
+	}
+	
+	public static void main(String[] args) {
+		org.junit.runner.JUnitCore.main("ECHashStringSet");
+	}
+
+}

@@ -1,0 +1,39 @@
+import static org.junit.Assert.*;
+
+import java.util.Iterator;
+
+import org.junit.Test;
+
+public class BSTStringSetTest {
+
+	@Test
+	public void testIterator() {
+		BSTStringSet test = new BSTStringSet();
+		test.put("f");
+		test.put("c");
+		test.put("k");
+		test.put("b");
+		test.put("e");
+		test.put("g");
+		test.put("l");
+		test.put("a");
+		test.printSet();
+		Iterator<String> it = test.iterator("c", "l");
+		assertEquals("c", it.next());
+		assertEquals("e", it.next());
+		assertEquals("f", it.next());
+		assertEquals("g", it.next());
+		assertEquals("k", it.next());
+		Iterator<String> it2 = test.iterator("a", "b");
+		assertEquals("a", it2.next());
+		Iterator<String> it3 = test.iterator("g", "l");
+		assertEquals("a", it3.next());
+
+
+	}
+
+	
+	public static void main(String[] args) {
+		org.junit.runner.JUnitCore.main("BSTStringSetTest");
+	}
+}
