@@ -1,0 +1,21 @@
+# Check that some simple moves entered by hand work.  The AI is never started.
+staff-loa
+None
+===#1===
+manual White
+start
+dump
+set d1 w
+dump
+set f5 w
+dump
+set c3 b
+dump
+set g7 b
+dump
+set d1 b
+set f5 e
+set c3 e
+set g7 e
+dump
+quit
