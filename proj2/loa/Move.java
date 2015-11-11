@@ -22,7 +22,7 @@ class Move {
         s = s.trim();
         if (s.matches("[a-h][1-9]-[a-h][1-9]\\b.*")) {
             String p1 = s.substring(0, 2);
-            String p2 = s.substring(3);
+            String p2 = s.substring(3, 5);
             return create(board.col(p1), board.row(p1),
                           board.col(p2), board.row(p2), board);
         } else {
@@ -37,7 +37,11 @@ class Move {
         if (!inBounds(column0, row0) || !inBounds(column1, row1)) {
             return null;
         }
-        int moved = board.get(column0, row0).ordinal();
+        Piece movedPiece = board.get(column0, row0);
+        if (movedPiece == EMP) {
+            return null;
+        }
+        int moved = movedPiece.ordinal();
         int replaced = board.get(column1, row1).ordinal();
         return _moves[column0][row0][column1][row1][moved][replaced];
     }
