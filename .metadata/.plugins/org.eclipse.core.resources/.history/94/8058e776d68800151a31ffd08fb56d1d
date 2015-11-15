@@ -1,0 +1,42 @@
+package loa;
+
+import static loa.Piece.BP;
+import static loa.Piece.EMP;
+import static loa.Piece.WP;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class BoardTest {
+
+	
+	@Test
+	public void testInitialize() {
+		Board b = new Board();
+		assertEquals(true, b.equals(new Board()));
+		
+		Piece[][] p1 = {
+		        { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
+		    };
+		Board b2 = new Board(p1, WP);
+		assertEquals(false, b2.equals(new Board()));
+		Board b3 = new Board(p1, BP);
+		assertEquals(true, b2.equals(new Board()));
+		
+		
+		
+		
+	}
+
+	
+	public static void main(String... args) {
+        System.exit(ucb.junit.textui.runClasses(BoardTest.class));
+    }
+}

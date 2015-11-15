@@ -1,0 +1,18 @@
+package loa;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class BoardTest {
+
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+	
+	public static void main(String[] args) {
+		org.junit.runner.JUnitCore.main("BoardTest");
+	}
+}

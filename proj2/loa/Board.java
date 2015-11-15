@@ -13,7 +13,7 @@ import static loa.Piece.*;
 import static loa.Direction.*;
 
 /** Represents the state of a game of Lines of Action.
- *  @author
+ *  @author Tim Chan
  */
 class Board implements Iterable<Move> {
 
@@ -51,17 +51,22 @@ class Board implements Iterable<Move> {
     void initialize(Piece[][] contents, Piece side) {
         _moves.clear();
 
-        // FIXME
+        //TK:
+        _board = new Piece[M][M];
+        //TK.
 
         for (int r = 1; r <= M; r += 1) {
             for (int c = 1; c <= M; c += 1) {
-                set(c, r, contents[r - 1][c - 1]);
+                set(c, r, contents[r - 1][c - 1]); //TK
             }
         }
+        recount();
         _turn = side;
     }
 
-    /** Set me to the initial configuration. */
+    
+	
+	/** Set me to the initial configuration. */
     void clear() {
         initialize(INITIAL_PIECES, BP);
     }
@@ -74,14 +79,21 @@ class Board implements Iterable<Move> {
         _moves.clear();
         _moves.addAll(board._moves);
         _turn = board._turn;
-        // FIXME
+        //TK:
+        for (int r = 1; r <= M; r += 1) {
+            for (int c = 1; c <= M; c += 1) {
+                set(c, r, board.get(c, r));
+            }
+        }
+        //TK.
     }
 
+    
     /** Return the contents of column C, row R, where 1 <= C,R <= 8,
      *  where column 1 corresponds to column 'a' in the standard
      *  notation. */
     Piece get(int c, int r) {
-        return null; // FIXME
+        return _board[r - 1][c - 1]; // TK.
 
     }
 
@@ -113,8 +125,12 @@ class Board implements Iterable<Move> {
     /** Set the square at column C, row R to V, and make NEXT the next side
      *  to move, if it is not null. */
     void set(int c, int r, Piece v, Piece next) {
-        // FIXME
-        if (next != null) {
+    	
+        //TK:
+    	_board[r - 1][c - 1] = v;
+    	//TK.
+    	
+    	if (next != null) {
             _turn = next;
         }
     }
@@ -161,6 +177,7 @@ class Board implements Iterable<Move> {
     /** Return true iff MOVE is legal for the player currently on move. */
     boolean isLegal(Move move) {
         return move != null; // FIXME
+        //Do not move off board
     }
 
     /** Return a sequence of all legal moves from this position. */
@@ -196,10 +213,23 @@ class Board implements Iterable<Move> {
         return _moves.size();
     }
 
+    /** Return true iff two Boards have the same _board layout and _turn. */
     @Override
     public boolean equals(Object obj) {
         Board b = (Board) obj;
-        return b == this;  // FIXME
+      //TK:
+        if (this.turn() != b.turn()) {
+        	return false;
+        }
+        for (int r = 1; r <= M; r += 1) {
+            for (int c = 1; c <= M; c += 1) {
+            	if (this.get(c, r) != b.get(c, r)) {
+            		return false;
+            	}
+            }
+        }
+        return true;
+        //TK.
     }
 
     @Override
@@ -221,7 +251,109 @@ class Board implements Iterable<Move> {
         out.format("Next move: %s%n===", turn().fullName());
         return out.toString();
     }
+    
+    //FUNCTION MIGHT NEEDED!!! NOT FINISHED.
+    /** Recount the Number of pieces.
+     *  in every direction at [r - 1][c - 1][-, |, \, /] */
+    void recount() {
+		for(int c = 1; c <= M; c++) {
+			for(int r = 1; r <= M; r++) {
+				_piecesCount[r - 1][c - 1][0] = rowCount(r);
+				_piecesCount[r - 1][c - 1][1] = colCount(c);
+			}
+		}	
+	}
+    
+    /** Recount the Number of pieces at col C: 1 <= C <= M. */
+	int colCount(int c) {
+		int result = 0;
+		for(int r = 0; r < M; r++) {
+			if(_board[r][c - 1] != EMP) {
+				result++;
+			}
+		}
+		return result;
+	}
 
+	/** Recount the Number of pieces at row R: 1 <= R <= M. */
+	int rowCount(int r) {
+		int result = 0;
+		for(int c = 0; c < M; c++) {
+			if(_board[r - 1][c] != EMP) {
+				result++;
+			}
+		}
+		return result;
+	}
+
+	/** Recount the Number of pieces along major diagonal (+ve slope) 
+	 * C: 1 <= C <= M; R: 1 <= R <= M. */
+	int majDiaCount(int c, int r) {
+		int c2 = c;
+		int r2 = r;
+		int result = 0;
+		while(c <= M && r <= M) {
+			System.out.println(c + " " + r);
+			if(_board[r - 1][c - 1] != EMP) {
+				result++;
+				System.out.println(c + " " + r + "++");
+			}
+			c++;
+			r++;	//_baord is upside down from real world.
+		}
+		System.out.println("up done");
+		if(c2 >= 1 && r2 >= 1) {
+			r2--;
+			c2--;
+		}
+		System.out.println(c2 + " " + r2);
+		System.out.println("md done");
+		while(c2 >= 1 && r2 >= 1) {
+			if(_board[r2 - 1][c2 - 1] != EMP) {
+				System.out.println(c2 + " " + r2);
+				result++;
+			}
+			c2--;
+			r2--;	//_baord is upside down from real world.
+		}
+		System.out.println("dl done");
+		return result;
+	}
+
+	/** Recount the Number of pieces along minor diagonal (-ve slope) 
+	 * C: 1 <= C <= M; R: 1 <= R <= M. */
+	int minDiaCount(int c, int r) {
+		int c2 = c;
+		int r2 = r;
+		int result = 0;
+		while(c >= 1 && r <= M) {
+			System.out.println(c + " " + r);
+			if(_board[r - 1][c - 1] != EMP) {
+				result++;
+				System.out.println(c + " " + r + "++");
+			}
+			c--;
+			r++;	//_baord is upside down from real world.
+		}
+		System.out.println("up done");
+		if(c2 >= 1 && r2 >= 1) {
+			r2--;
+			c2++;
+		}
+		System.out.println(c2 + " " + r2);
+		System.out.println("md done");
+		while(c2 <= M && r2 >= 1) {
+			if(_board[r2 - 1][c2 - 1] != EMP) {
+				System.out.println(c2 + " " + r2);
+				result++;
+			}
+			c2++;
+			r2--;	//_baord is upside down from real world.
+		}
+		System.out.println("dl done");
+		return result;
+	}
+	
     /** Return the number of pieces in the line of action indicated by MOVE. */
     private int pieceCountAlong(Move move) {
         return 1;  // FIXME
@@ -255,8 +387,11 @@ class Board implements Iterable<Move> {
     private final ArrayList<Move> _moves = new ArrayList<>();
     /** Current side on move. */
     private Piece _turn;
-
-    // FILL IN
+    /** Board of a current game. */
+    private Piece[][] _board = new Piece[M][M];
+    /** Number of pieces in every direction at [r - 1][c - 1][-, |, \, /]*/
+    private int[][][] _piecesCount = new int[8][8][4];
+    
 
     /** An iterator returning the legal moves from the current board. */
     private class MoveIterator implements Iterator<Move> {
