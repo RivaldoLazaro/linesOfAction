@@ -1,5 +1,14 @@
 package loa;
 
+import static loa.Direction.E;
+import static loa.Direction.N;
+import static loa.Direction.NE;
+import static loa.Direction.NOWHERE;
+import static loa.Direction.NW;
+import static loa.Direction.S;
+import static loa.Direction.SE;
+import static loa.Direction.SW;
+import static loa.Direction.W;
 import static loa.Piece.BP;
 import static loa.Piece.EMP;
 import static loa.Piece.WP;
@@ -184,7 +193,6 @@ public class BoardTest {
 		c.set(6, 8, EMP);
 		c.set(7, 4, BP);
 		c.set(8, 7, EMP);
-		System.out.println(c);
 		int[] colCount2 = new int[]{6, 3, 3, 1, 3, 1, 3, 5}; 
 		for(int col = 1; col <= Board.M; col++) {
 			assertEquals(colCount2[col - 1], c.colCount(col));
@@ -229,7 +237,6 @@ public class BoardTest {
 										  {0, 2, 2, 2, 2, 2, 2, 0}}; 
 		for(int c = 1; c <= Board.M; c++) {
 			for(int r = 1; r <= Board. M; r++) {
-				System.out.println("step at " + c + " " + r);
 				assertEquals(majDiaCount[r - 1][c - 1], b.majDiaCount(c, r));
 			}
 		}
@@ -243,7 +250,6 @@ public class BoardTest {
 		c.set(6, 8, EMP);
 		c.set(7, 4, BP);
 		c.set(8, 7, EMP);
-		System.out.println(c);
 		int[][] majDiaCount2 = new int[][]{{1, 1, 3, 2, 2, 2, 2, 0}, // notice it's upside down
 			  							   {2, 1, 1, 3, 2, 2, 2, 2},
 			  							   {1, 2, 1, 1, 3, 2, 2, 2},
@@ -254,7 +260,6 @@ public class BoardTest {
 			  							   {0, 2, 2, 2, 3, 1, 2, 1}}; 
 		for(int c2 = 1; c2 <= Board.M; c2++) {
 			for(int r = 1; r <= Board. M; r++) {
-				System.out.println("step at " + c2 + " " + r);
 				assertEquals(majDiaCount2[r - 1][c2 - 1], c.majDiaCount(c2, r));
 			}
 		}
@@ -274,7 +279,6 @@ public class BoardTest {
 										  {0, 2, 2, 2, 2, 2, 2, 0}}; 
 		for(int c = 1; c <= Board.M; c++) {
 			for(int r = 1; r <= Board. M; r++) {
-				System.out.println("step at " + c + " " + r);
 				assertEquals(minDiaCount[r - 1][c - 1], b.minDiaCount(c, r));
 			}
 		}
@@ -288,7 +292,6 @@ public class BoardTest {
 		c.set(6, 8, EMP);
 		c.set(7, 4, BP);
 		c.set(8, 7, EMP);
-		System.out.println(c);
 		int[][] minDiaCount2 = new int[][]{{0, 2, 3, 1, 2, 2, 3, 1}, // notice it's upside down
 			  							   {2, 3, 1, 2, 2, 3, 1, 2},
 			  							   {3, 1, 2, 2, 3, 1, 2, 3},
@@ -299,10 +302,95 @@ public class BoardTest {
 			  							   {1, 2, 3, 2, 2, 1, 1, 0}}; 
 		for(int c2 = 1; c2 <= Board.M; c2++) {
 			for(int r = 1; r <= Board. M; r++) {
-				System.out.println("step at " + c2 + " " + r);
 				assertEquals(minDiaCount2[r - 1][c2 - 1], c.minDiaCount(c2, r));
 			}
 		}
+	}
+	
+	@Test
+	public void testPieceCountAlong() {
+		
+		Board b1 = new Board();
+		Move v = new Move(4, 1, 4, 3, EMP, EMP);
+		assertEquals(2, b1.pieceCountAlong(v));
+		Move v2 = new Move(1, 2, 3, 2, EMP, EMP);
+		assertEquals(2, b1.pieceCountAlong(v2));
+		
+		Piece[][] p = {
+		        { WP, BP,  BP,  BP,  WP,  BP,  BP,  WP },
+		        { WP, EMP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP, WP, WP,  EMP, EMP, EMP, EMP, WP  },
+		        { WP, WP, WP, BP,  EMP, EMP, EMP, BP  },
+		        { WP, EMP, WP, EMP, BP, EMP, EMP, BP  },
+		        { BP, BP,	BP, EMP, EMP, BP,  EMP, WP  },
+		        { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { BP, BP,  BP,  WP,  BP,  BP,  WP,  WP }
+			};
+		
+		Board b2 = new Board(p, BP);
+		v = new Move(1, 2, 3, 4, EMP, EMP);
+		assertEquals(4, b2.pieceCountAlong(v));
+		v = new Move(2, 7, 4, 5, EMP, EMP);
+		assertEquals(3, b2.pieceCountAlong(v));
+		v = new Move(8, 8, 1, 1, EMP, EMP);
+		assertEquals(6, b2.pieceCountAlong(v));
+		v = new Move(4, 6, 7, 3, EMP, EMP);
+		assertEquals(3, b2.pieceCountAlong(v));
+		v = new Move(5, 2, 8, 5, EMP, EMP);
+		assertEquals(3, b2.pieceCountAlong(v));
+		v = new Move(1, 4, 5, 8, EMP, EMP);
+		assertEquals(3, b2.pieceCountAlong(v));
+		v = new Move(3, 8, 7, 4, EMP, EMP);
+		assertEquals(2, b2.pieceCountAlong(v));
+		v = new Move(5, 4, 6, 3, EMP, EMP);
+		assertEquals(3, b2.pieceCountAlong(v));
+		v = new Move(4, 3, 2, 1, EMP, EMP);
+		assertEquals(2, b2.pieceCountAlong(v));
+	}
+	
+	@Test
+	public void testBlocked() {
+
+		Piece[][] p = {
+		        { WP, BP,  BP,  BP,  WP,  BP,  BP,  WP },
+		        { WP, EMP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP, WP, WP,  EMP, EMP, EMP, EMP, WP  },
+		        { WP, WP, WP, BP,  EMP, EMP, EMP, BP  },
+		        { WP, EMP, WP, EMP, BP, EMP, EMP, BP  },
+		        { BP, BP,	BP, EMP, EMP, BP,  EMP, WP  },
+		        { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { BP, BP,  BP,  WP,  BP,  BP,  WP,  WP }
+			};
+		
+		Board b = new Board(p, BP);
+		
+		Move v = Move.create(4, 4, 7, 7, b);
+		assertEquals(false, b.blocked(v));
+		
+		System.out.println(b);
+		Move v2 = Move.create(1, 2, 3, 4, b);
+		assertEquals(true, b.blocked(v2));
+		
+		v = Move.create(8, 8, 1, 1, b);
+		assertEquals(true, b.blocked(v));
+		
+		v = Move.create(3, 6, 8, 1, b);
+		assertEquals(false, b.blocked(v));
+		
+		v = Move.create(3, 6, 8, 0, b);
+		assertEquals(false, b.blocked(v));
+		
+		v = Move.create(5, 2, 8, 5, b);
+		assertEquals(false, b.blocked(v));
+		
+		v = Move.create(1, 4, 5, 8, b);
+		assertEquals(true, b.blocked(v));
+		
+		v = Move.create(3, 8, 7, 4, b);
+		assertEquals(false, b.blocked(v));
+		
+		v = Move.create(3, 8, 8, 3, b);
+		assertEquals(false, b.blocked(v));
 	}
 
 	

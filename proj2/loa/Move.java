@@ -57,7 +57,7 @@ class Move {
     /** A new Move of the piece at COL0, ROW0 to COL1, ROW1. MOVED is the
      *  piece being moved from COL0, ROW0, and REPLACED is the piece (or EMP)
      *  that it replaces. */
-    private Move(int col0, int row0, int col1, int row1,
+    Move(int col0, int row0, int col1, int row1,
                  Piece moved, Piece replaced) {
         assert 1 <= col0 && col0 <= M && 1 <= row0 && row0 <= M
             && 1 <= col1 && col1 <= M && 1 <= row1 && row1 <= M
@@ -106,6 +106,20 @@ class Move {
     /** Return the length of this move (number of squares moved). */
     int length() {
         return Math.max(Math.abs(_row1 - _row0), Math.abs(_col1 - _col0));
+    }
+    
+    /** Return the direction of move. */
+    Direction dir() {
+    	Integer Col1 = new Integer(getCol1());
+        Integer Row1 = new Integer(getRow1());
+        
+        for(Direction dir : Direction.values()) {
+        	if(Col1.compareTo(getCol0()) == dir.dc &&
+        			Row1.compareTo(getRow0()) == dir.dr) {
+        		return dir;
+        	}	
+        }
+        return NOWHERE;
     }
 
     /** Return true IFF (C, R) denotes a square on the board, that is if

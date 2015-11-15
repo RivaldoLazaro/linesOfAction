@@ -293,30 +293,23 @@ class Board implements Iterable<Move> {
 		int r2 = r;
 		int result = 0;
 		while(c <= M && r <= M) {
-			System.out.println(c + " " + r);
 			if(_board[r - 1][c - 1] != EMP) {
 				result++;
-				System.out.println(c + " " + r + "++");
 			}
 			c++;
 			r++;	//_baord is upside down from real world.
 		}
-		System.out.println("up done");
 		if(c2 >= 1 && r2 >= 1) {
 			r2--;
 			c2--;
 		}
-		System.out.println(c2 + " " + r2);
-		System.out.println("md done");
 		while(c2 >= 1 && r2 >= 1) {
 			if(_board[r2 - 1][c2 - 1] != EMP) {
-				System.out.println(c2 + " " + r2);
 				result++;
 			}
 			c2--;
 			r2--;	//_baord is upside down from real world.
 		}
-		System.out.println("dl done");
 		return result;
 	}
 
@@ -327,48 +320,105 @@ class Board implements Iterable<Move> {
 		int r2 = r;
 		int result = 0;
 		while(c >= 1 && r <= M) {
-			System.out.println(c + " " + r);
 			if(_board[r - 1][c - 1] != EMP) {
 				result++;
-				System.out.println(c + " " + r + "++");
 			}
 			c--;
 			r++;	//_baord is upside down from real world.
 		}
-		System.out.println("up done");
 		if(c2 >= 1 && r2 >= 1) {
 			r2--;
 			c2++;
 		}
-		System.out.println(c2 + " " + r2);
-		System.out.println("md done");
 		while(c2 <= M && r2 >= 1) {
 			if(_board[r2 - 1][c2 - 1] != EMP) {
-				System.out.println(c2 + " " + r2);
 				result++;
 			}
 			c2++;
 			r2--;	//_baord is upside down from real world.
 		}
-		System.out.println("dl done");
 		return result;
 	}
 	
     /** Return the number of pieces in the line of action indicated by MOVE. */
-    private int pieceCountAlong(Move move) {
-        return 1;  // FIXME
+    int pieceCountAlong(Move move) {
+        //TK:
+    	return pieceCountAlong(move.getCol0(), move.getRow0(), move.dir());
+    	//TK.
     }
 
     /** Return the number of pieces in the line of action in direction DIR and
      *  containing the square at column C and row R. */
-    private int pieceCountAlong(int c, int r, Direction dir) {
-        return 1;  // FIXME
+    int pieceCountAlong(int c, int r, Direction dir) {
+    	//TK:
+    	switch(dir) {
+    		case N: case S:
+    			return colCount(c);
+    		case E: case W:
+    			return rowCount(r);	
+    		case NE: case SW:
+    			return majDiaCount(c, r);
+    		case NW: case SE:
+    			return minDiaCount(c, r);
+    		default:
+    			return 0;
+    	}
+    	//TK.
     }
 
+    //FIXME TEST NEEDED
     /** Return true iff MOVE is blocked by an opposing piece or by a
      *  friendly piece on the target square. */
-    private boolean blocked(Move move) {
-        return false;  // FIXME
+    boolean blocked(Move move) {
+    	//TK:
+    	int ci = move.getCol0();
+    	int ri = move.getRow0();
+    	int cf = move.getCol1();
+    	int rf = move.getRow1();
+    	
+    	if(this.get(cf, rf) == move.movedPiece()) {
+    		return true;
+    	}
+    	
+    	while(ci != cf || ri != rf) {
+        	switch(move.dir()) {
+	    		case N:
+	    			ri++;
+	    			break;
+	    		case S:
+	    			ri--;
+	    			break;
+	    		case E:
+	    			ci++;
+	    			break;
+	    		case W:
+	    			ci--;
+	    			break;
+	    		case NE:
+	    			ri++;
+	    			ci++;
+	    			break;
+	    		case SW:
+	    			ri--;
+	    			ci--;
+	    			break;
+	    		case NW:
+	    			ri++;
+	    			ci--;
+	    			break;
+	    		case SE:
+	    			ri--;
+	    			ci++;
+	    			break;
+	    		default:
+	    			break;
+        	}
+        	if(this.get(ci, ri) == move.movedPiece().opposite()) {
+        		return true;
+        	}
+    	}
+    	//TK.
+        return false;
     }
 
     /** The standard initial configuration for Lines of Action. */

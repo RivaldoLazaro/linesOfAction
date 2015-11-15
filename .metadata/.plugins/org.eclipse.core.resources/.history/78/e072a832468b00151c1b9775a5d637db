@@ -1,0 +1,24 @@
+package loa;
+
+import static loa.Direction.*;
+import static loa.Piece.BP;
+import static loa.Piece.EMP;
+import static loa.Piece.WP;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class MoveTest {
+
+	@Test
+	public void testDir() {
+
+		Move v = new Move(1, 2, 3, 4, EMP, EMP);
+		assertEquals(NE, v.dir());
+	}
+	
+	public static void main(String... args) {
+        System.exit(ucb.junit.textui.runClasses(MoveTest.class));
+    }
+
+}
