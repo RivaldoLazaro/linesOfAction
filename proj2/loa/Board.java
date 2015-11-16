@@ -86,6 +86,11 @@ class Board implements Iterable<Move> {
     void clear() {
         initialize(INITIAL_PIECES, BP);
     }
+    
+	/** Set me to the desired configuration. */
+    void clear(Piece[][] b, Piece p) {
+    	initialize(b, p);
+    }
 
     /** Set my state to a copy of BOARD. */
     void copyFrom(Board board) {
@@ -481,6 +486,30 @@ class Board implements Iterable<Move> {
         { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
         { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
         { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
+    };
+    
+    /** Grid for testing winning cases */
+    static final Piece[][] WIN_BOARD = {
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, WP,  EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, BP,  EMP, EMP, WP , BP , EMP, EMP }
+    };
+    
+    /** Grid for testing tie cases */
+    static final Piece[][] TIE_BOARD = {
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, WP,  EMP, EMP, EMP },
+        { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+        { EMP, EMP, BP,  EMP, BP , WP,  EMP, EMP }
     };
 
     /** List of all unretracted moves on this board, in order. */

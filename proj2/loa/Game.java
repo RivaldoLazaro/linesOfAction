@@ -126,6 +126,10 @@ class Game {
                 	System.err.println(e.getMessage());
                 }
                 return true;
+            case "retract":
+            	_playing = false;
+            	_board.retract();
+            	return true;
             case "dump":
                 System.out.println(_board);
                 return true;
@@ -134,6 +138,18 @@ class Game {
             case "help": case "?":
                 help();
                 return true;
+            case "wpwin" :
+            	_board.clear(Board.WIN_BOARD, WP);
+            	return true;
+            case "bpwin" :
+            	_board.clear(Board.WIN_BOARD, BP);
+            	return true;
+            case "wtie" :
+            	_board.clear(Board.TIE_BOARD, WP);
+            	return true;
+            case "btie" :
+            	_board.clear(Board.TIE_BOARD, BP);
+            	return true;
             default:
                 return false;
             }
@@ -205,7 +221,11 @@ class Game {
 
     /** Print an announcement of the winner. */
     private void announceWinner() {
-        // FIXME
+    	if(_board.turn() == WP) {
+    		System.out.println("Black wins.");
+    	} else if (_board.turn() == BP) {
+    		System.out.println("White wins.");
+    	}
     }
 
     /** Return an integer r, 0 <= r < N, randomly chosen from a
@@ -221,12 +241,11 @@ class Game {
           "is ignored. Comment lines begin with # and are ignored.\n");    
     	
     	       
-          
-        System.out.printf("%-10s%s" , "uv-xy", "A move from square uv to square xy.  Here u and v are column\n" + 
-          "designations (a-h) and v and y are row designations (1-8).\n");
     	System.out.printf("%-10s%s" , "start", "Start playing from the current position.\n");
     	System.out.printf("%-10s%s" , "stop", "Stop game (pause).\n");
     	System.out.printf("%-10s%s" , "clear", "Stop game and reset to initial position.\n");
+        System.out.printf("%-10s%s" , "uv-xy", "A move from square uv to square xy.  Here u and v are column\n");
+    	System.out.printf("%-10s%s" , "", "designations (a-h) and v and y are row designations (1-8).\n");
     	System.out.printf("%-10s%s" , "auto P", "Stops game. P is white or black; makes P into an AI.\n");
     	System.out.printf("%-10s%s" , "manual P", "Stops game. P is white or black; takes moves for P from terminal.\n");
     	System.out.printf("%-10s%s" , "set cr P", "Stops game. Then put P ('w', 'b', or 'e') into square cr.\n");
