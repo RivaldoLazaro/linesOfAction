@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Formatter;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import java.util.regex.Pattern;
 
 import static loa.Piece.*;
+import static loa.Board.M;
 import static loa.Direction.*;
 
 /** Represents the state of a game of Lines of Action.
@@ -60,12 +62,26 @@ class Board implements Iterable<Move> {
                 set(c, r, contents[r - 1][c - 1]); //TK
             }
         }
-        recount();
+        //recount();
+        makeZobristTable();
         _turn = side;
     }
 
     
-	
+    /** Build Zobrist table from _zobristSeed. */
+	private void makeZobristTable() {
+		Random r = new Random(_zobristSeed);
+		for(int i = 0; i < M; i++) {
+			for(int j = 0; j < M; j++) {
+				for(int k = 0; k < 2; k++) {
+					_zobristTable[i][j][k] = r.nextInt();
+				}
+			}
+		}
+		_turnHash[0] = r.nextInt();
+		_turnHash[1] = r.nextInt();
+	}
+
 	/** Set me to the initial configuration. */
     void clear() {
         initialize(INITIAL_PIECES, BP);
@@ -127,6 +143,9 @@ class Board implements Iterable<Move> {
     void set(int c, int r, Piece v, Piece next) {
     	
         //TK:
+    	if (!inBound(c, r)) {
+            throw new IllegalArgumentException("Error: invalid location to set: ");
+        }
     	_board[r - 1][c - 1] = v;
     	//TK.
     	
@@ -176,8 +195,8 @@ class Board implements Iterable<Move> {
 
     /** Return true iff MOVE is legal for the player currently on move. */
     boolean isLegal(Move move) {
-        return move != null; // FIXME
-        //Do not move off board
+        return move != null && !blocked(move) && move.movedPiece() == turn() &&
+        		move.length() == pieceCountAlong(move);
     }
 
     /** Return a sequence of all legal moves from this position. */
@@ -203,10 +222,50 @@ class Board implements Iterable<Move> {
 
     /** Return true iff SIDE's pieces are continguous. */
     boolean piecesContiguous(Piece side) {
-        return false; // FIXME
+    	int[][] sidePieceOnly = new int[M][M];
+    	int c0 = 0;
+    	int r0 = 0;
+    	for(int c = 1; c <= M; c++) {
+    		for(int r = 1; r <= M; r++) {
+    			if(get(c, r) == side) {
+    				if(c0 == 0 && r0 == 0) {
+    					c0 = c;
+    					r0 = r;
+    				}
+    				sidePieceOnly[r - 1][c - 1] = 1;
+    			} else {
+    				sidePieceOnly[r - 1][c - 1] = 0;
+    			}
+    		}
+    	}
+    	
+    	sidePieceOnly = markOff(sidePieceOnly, c0, r0);
+    	
+    	for(int c = 1; c <= M; c++) {
+    		for(int r = 1; r <= M; r++) {
+    			if(sidePieceOnly[r - 1][c - 1] == 1) {
+    				return false;
+    			}
+    		}
+    	}
+        return true;
     }
 
-    /** Return the total number of moves that have been made (and not
+    private static int[][] markOff(int[][] i, int c, int r) {
+    	i[r - 1][c - 1] = 0;
+    	for(Direction dir : Direction.values()) {
+    		if(inBound(c + dir.dc, r + dir.dr) && i[r + dir.dr - 1][c + dir.dc - 1] == 1) {
+    			i = markOff(i, c + dir.dc, r + dir.dr);
+        	}		
+    	}
+		return i;
+	}
+
+	private static boolean inBound(int c, int r) {
+		return 1 <= c && c <= M && 1 <= r && r <= M;
+	}
+
+	/** Return the total number of moves that have been made (and not
      *  retracted).  Each valid call to makeMove with a normal move increases
      *  this number by 1. */
     int movesMade() {
@@ -234,7 +293,25 @@ class Board implements Iterable<Move> {
 
     @Override
     public int hashCode() {
-        return 0; // FIXME
+    	//TK:
+    	int result = 0;
+    	for(int c = 1; c <= M; c++) {
+    		for (int r = 1; r <= M; r++) {
+    			Piece p = get(c, r);
+    			if(p == WP) {
+    				result = result ^ _zobristTable[r - 1][c - 1][0];
+    			} else if (p == BP) {
+    				result = result ^ _zobristTable[r - 1][c - 1][1];
+    			}
+    		}
+    	}
+    	if(turn() == WP) {
+    		result = result ^ _turnHash[0];
+    	} else if(turn() == BP) {
+    		result = result ^ _turnHash[1];
+    	}
+        return result;
+        //TK.
     }
 
     @Override
@@ -366,7 +443,6 @@ class Board implements Iterable<Move> {
     	//TK.
     }
 
-    //FIXME TEST NEEDED
     /** Return true iff MOVE is blocked by an opposing piece or by a
      *  friendly piece on the target square. */
     boolean blocked(Move move) {
@@ -381,41 +457,15 @@ class Board implements Iterable<Move> {
     	}
     	
     	while(ci != cf || ri != rf) {
-        	switch(move.dir()) {
-	    		case N:
-	    			ri++;
-	    			break;
-	    		case S:
-	    			ri--;
-	    			break;
-	    		case E:
-	    			ci++;
-	    			break;
-	    		case W:
-	    			ci--;
-	    			break;
-	    		case NE:
-	    			ri++;
-	    			ci++;
-	    			break;
-	    		case SW:
-	    			ri--;
-	    			ci--;
-	    			break;
-	    		case NW:
-	    			ri++;
-	    			ci--;
-	    			break;
-	    		case SE:
-	    			ri--;
-	    			ci++;
-	    			break;
-	    		default:
-	    			break;
-        	}
-        	if(this.get(ci, ri) == move.movedPiece().opposite()) {
+    		if(this.get(ci, ri) == move.movedPiece().opposite()) {
         		return true;
         	}
+    		for(Direction dir : Direction.values()) {
+    			if(move.dir() == dir) {
+    				ri += dir.dr;
+    				ci += dir.dc;
+    			}
+    		}
     	}
     	//TK.
         return false;
@@ -439,6 +489,12 @@ class Board implements Iterable<Move> {
     private Piece _turn;
     /** Board of a current game. */
     private Piece[][] _board = new Piece[M][M];
+    /** Seed for Zobrist Keys. */
+    private final int _zobristSeed = 820329520;
+    /** Random key for Zobrist table. [r - 1][c - 1][WP, BP]*/
+    private final int[][][] _zobristTable = new int[M][M][2];
+    /** Random key for generating hash code (turn)*/
+    private final int[] _turnHash = new int[2];
     /** Number of pieces in every direction at [r - 1][c - 1][-, |, \, /]*/
     private int[][][] _piecesCount = new int[8][8][4];
     

@@ -14,7 +14,7 @@ import static loa.Piece.*;
 import static loa.Main.*;
 
 /** Represents one game of Lines of Action.
- *  @author  */
+ *  @author  Tim Chan*/
 class Game {
 
     /** A new series of Games. */
@@ -73,8 +73,13 @@ class Game {
 
     /** Print a prompt for a move. */
     private void prompt() {
-        System.out.print("> ");
-        System.out.flush();
+    	if(_playing) {
+    		System.out.print(_board.turn().abbrev() + "> ");
+    		System.out.flush();
+    	} else {
+    		System.out.print("-> ");
+    		System.out.flush();
+    	}
     }
 
     /** Describes a command with up to two arguments. */
@@ -101,10 +106,32 @@ class Game {
             case "seed":
                 seedCommand(command.group(2));
                 return true;
-
-            // FILL THIS IN
-
-            case "help":
+            case "start":
+                _playing = true;
+                return true;
+            case "stop":
+                _playing = false;
+                return true;
+            case "clear":
+                _playing = false;
+                _board.clear();
+                return true;
+            case "set":
+                _playing = false;
+                int c = command.group(2).toLowerCase().charAt(0)-'a' + 1;
+                int r = command.group(2).charAt(1)-'0';
+                try{
+                	_board.set(c, r, setValueOf(command.group(3).toLowerCase()));
+                } catch(IllegalArgumentException e) {
+                	System.err.println(e.getMessage());
+                }
+                return true;
+            case "dump":
+                System.out.println(_board);
+                return true;
+            case "quit": case "q":
+                quit();
+            case "help": case "?":
                 help();
                 return true;
             default:
@@ -189,7 +216,25 @@ class Game {
 
     /** Print a help message. */
     void help() {
-        // FIXME
+    	
+    	System.out.println("Commands: Commands are whitespace-delimited.  Other trailing text on a line\n" + 
+          "is ignored. Comment lines begin with # and are ignored.\n");    
+    	
+    	       
+          
+        System.out.printf("%-10s%s" , "uv-xy", "A move from square uv to square xy.  Here u and v are column\n" + 
+          "designations (a-h) and v and y are row designations (1-8).\n");
+    	System.out.printf("%-10s%s" , "start", "Start playing from the current position.\n");
+    	System.out.printf("%-10s%s" , "stop", "Stop game (pause).\n");
+    	System.out.printf("%-10s%s" , "clear", "Stop game and reset to initial position.\n");
+    	System.out.printf("%-10s%s" , "auto P", "Stops game. P is white or black; makes P into an AI.\n");
+    	System.out.printf("%-10s%s" , "manual P", "Stops game. P is white or black; takes moves for P from terminal.\n");
+    	System.out.printf("%-10s%s" , "set cr P", "Stops game. Then put P ('w', 'b', or 'e') into square cr.\n");
+    	System.out.printf("%-10s%s" , "dumb", "Display the board in standard format.\n");
+    	System.out.printf("%-10s%s" , "q", "\n");
+    	System.out.printf("%-10s%s" , "quit", "End program.\n");
+    	System.out.printf("%-10s%s" , "help", "\n");
+    	System.out.printf("%-10s%s" , "?", "This text.\n");
     }
 
     /** The official game board. */

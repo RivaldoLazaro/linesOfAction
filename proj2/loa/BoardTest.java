@@ -30,17 +30,6 @@ public class BoardTest {
 		Board b3 = new Board(Board.INITIAL_PIECES, BP);
 		assertEquals(true, b3.equals(new Board()));
 		
-		Piece[][] p1 = {
-		        { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP },
-		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
-		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
-		        { WP,  EMP, EMP, BP, EMP, EMP, EMP, WP  },
-		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
-		        { WP,  BP,	EMP, EMP, EMP, BP, EMP, WP  },
-		        { WP,  EMP, EMP, EMP, EMP, EMP, EMP, WP  },
-		        { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
-			};
-		
 		Board b4 = new Board(Board.INITIAL_PIECES, BP);
 		Board b5 = new Board(b4);
 		assertEquals(true, b4.equals(b5));	
@@ -362,37 +351,174 @@ public class BoardTest {
 		        { BP, BP,  BP,  WP,  BP,  BP,  WP,  WP }
 			};
 		
+		
 		Board b = new Board(p, BP);
 		
 		Move v = Move.create(4, 4, 7, 7, b);
 		assertEquals(false, b.blocked(v));
 		
-		System.out.println(b);
-		Move v2 = Move.create(1, 2, 3, 4, b);
-		assertEquals(true, b.blocked(v2));
+		v = Move.create(1, 2, 4, 5, b);
+		assertEquals(false, b.blocked(v));
 		
-		v = Move.create(8, 8, 1, 1, b);
+		v = Move.create(8, 8, 2, 2, b);
 		assertEquals(true, b.blocked(v));
 		
-		v = Move.create(3, 6, 8, 1, b);
+		v = Move.create(3, 6, 6, 3, b);
 		assertEquals(false, b.blocked(v));
-		
-		v = Move.create(3, 6, 8, 0, b);
-		assertEquals(false, b.blocked(v));
-		
+
 		v = Move.create(5, 2, 8, 5, b);
 		assertEquals(false, b.blocked(v));
 		
-		v = Move.create(1, 4, 5, 8, b);
+		v = Move.create(1, 4, 4, 7, b);
 		assertEquals(true, b.blocked(v));
 		
-		v = Move.create(3, 8, 7, 4, b);
-		assertEquals(false, b.blocked(v));
-		
-		v = Move.create(3, 8, 8, 3, b);
+		v = Move.create(3, 8, 5, 6, b);
 		assertEquals(false, b.blocked(v));
 	}
 
+	@Test
+	public void testHashCode() {
+
+		Piece[][] p = {
+		        { WP, BP,  BP,  BP,  WP,  BP,  BP,  WP },
+		        { WP, EMP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP, WP, WP,  EMP, EMP, EMP, EMP, WP  },
+		        { WP, WP, WP, BP,  EMP, EMP, EMP, BP  },
+		        { WP, EMP, WP, EMP, BP, EMP, EMP, BP  },
+		        { BP, BP,	BP, EMP, EMP, BP,  EMP, WP  },
+		        { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { BP, BP,  BP,  WP,  BP,  BP,  WP,  WP }
+			};
+		
+		
+		Board b = new Board(p, BP);
+		assertEquals(-1701092111, b.hashCode());
+		
+		b.set(3, 5, BP);
+		assertEquals(1558637313, b.hashCode());
+		
+		p[4][2] = BP;
+		Board b2 = new Board(p, BP);
+		assertEquals(1558637313, b2.hashCode());
+		
+		b.set(3, 5, WP);
+		assertEquals(false, 1558637313 == b.hashCode());
+		assertEquals(-1701092111, b.hashCode());
+		
+		b2.set(3, 5, WP, WP);
+		assertEquals(false, -1701092111 == b2.hashCode());
+		assertEquals(-1656007091, b2.hashCode());
+		
+		b.set(3, 5, WP, WP);
+		assertEquals(b.hashCode(), b2.hashCode());
+		
+		b2.set(3, 5, EMP, WP);
+		assertEquals(false, b.hashCode() == b2.hashCode());
+		assertEquals(-1785467449, b2.hashCode());
+		
+		Piece[][] p1 = {
+		        { WP, BP,  WP,  BP,  WP,  BP,  BP,  EMP },
+		        { EMP, EMP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP, WP, WP,  EMP, EMP, EMP, EMP, WP  },
+		        { WP, WP, WP, BP,  EMP, EMP, EMP, WP  },
+		        { WP, EMP, WP, EMP, BP, EMP, EMP, BP  },
+		        { BP, WP,	BP, EMP, EMP, BP,  EMP, WP  },
+		        { WP, EMP, EMP, WP, EMP, EMP, EMP, EMP  },
+		        { EMP, BP,  BP,  WP,  WP,  BP,  WP,  WP }
+			};
+		
+		Piece[][] p2 = {
+		        { WP, BP,  WP,  BP,  WP,  BP,  BP,  EMP },
+		        { EMP, EMP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP, WP, WP,  EMP, EMP, EMP, EMP, WP  },
+		        { WP, WP, WP, BP,  EMP, EMP, EMP, WP  },
+		        { WP, EMP, WP, EMP, BP, EMP, EMP, BP  },
+		        { BP, WP,	BP, EMP, EMP, BP,  EMP, WP  },
+		        { WP, EMP, EMP, WP, EMP, EMP, EMP, EMP  },
+		        { EMP, BP,  BP,  WP,  WP,  BP,  WP,  WP }
+			};
+		
+		Board a1 = new Board(p1, WP);
+		Board a2 = new Board(p2, WP);
+		Board a3 = new Board(p2, BP);
+		
+		assertEquals(a1.hashCode(), a2.hashCode());
+		assertEquals(false, a3.hashCode() == a2.hashCode());
+	}
+
+	@Test
+	public void testPiecesContiguous() {
+
+		Piece[][] p = {
+		        { WP,  BP,  BP,  WP,  BP,  BP,  BP,  WP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { EMP, EMP, WP,  WP,  EMP, WP,  EMP, EMP },
+		        { WP,  WP, 	WP,  WP,  WP,  WP,  WP,  WP },
+		        { EMP, EMP, EMP, WP,  WP,  EMP, EMP, EMP },
+		        { EMP, EMP, WP , WP,  EMP, WP,  EMP, EMP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { WP,  EMP, EMP, WP,  EMP, EMP, EMP, WP }
+			};
+		Board b = new Board(p, BP);
+		assertEquals(true, b.piecesContiguous(WP));
+		assertEquals(false, b.piecesContiguous(BP));
+		
+		Piece[][] p2 = {
+				{ WP,  BP,  BP,  WP,  BP,  BP,  BP,  WP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { EMP, EMP, WP,  BP,  EMP, WP,  EMP, EMP },
+		        { WP,  WP, 	BP,  EMP,  WP,  WP,  WP,  WP },
+		        { EMP, EMP, EMP, WP,  WP,  EMP, EMP, EMP },
+		        { EMP, EMP, WP , WP,  EMP, WP,  EMP, EMP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { WP,  EMP, EMP, WP,  EMP, EMP, EMP, WP }
+			};
+		Board b2 = new Board(p2, BP);
+		assertEquals(false, b2.piecesContiguous(WP));
+		assertEquals(false, b2.piecesContiguous(BP));
+		
+		Piece[][] p3 = {
+		        { EMP, BP,  BP,  BP,  WP,  BP,  BP,  EMP },
+		        { WP,  EMP, EMP, WP, EMP, WP, EMP, WP  },
+		        { WP,  EMP, WP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  WP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  EMP, WP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  WP, EMP, EMP, EMP, WP, EMP, WP  },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, WP, WP  },
+		        { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
+		    };
+		Board b3 = new Board(p3, WP);
+		assertEquals(true, b3.piecesContiguous(WP));
+		b3.set(7, 7, BP);
+		assertEquals(false, b3.piecesContiguous(WP));
+	}
+	
+	@Test
+	public void testIsLegal() {
+
+		Piece[][] p = {
+		        { WP, BP,  BP,  BP,  WP,  BP,  BP,  WP },
+		        { WP, EMP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP, WP, WP,  EMP, EMP, EMP, EMP, WP  },
+		        { WP, WP, WP, BP,  EMP, EMP, EMP, BP  },
+		        { WP, EMP, WP, EMP, BP, EMP, EMP, BP  },
+		        { BP, BP,	BP, EMP, EMP, BP,  EMP, WP  },
+		        { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { BP, BP,  BP,  WP,  BP,  BP,  WP,  WP }
+			};
+		
+		
+		Board b = new Board(p, BP);
+		System.out.println(b);
+		assertEquals(false, b.isLegal(Move.create("a3-e3", b)));
+		assertEquals(true, b.isLegal(Move.create("h4-c4", b)));
+		assertEquals(true, b.isLegal(Move.create("a8-d5", b)));
+		assertEquals(false, b.isLegal(Move.create("h1-d4", b)));
+		assertEquals(false, b.isLegal(Move.create("a1-b4", b)));
+		b = new Board(p, WP);
+		assertEquals(true, b.isLegal(Move.create("a3-e3", b)));
+		assertEquals(true, b.isLegal(Move.create("e1-e5", b)));
+	}
 	
 	public static void main(String... args) {
         System.exit(ucb.junit.textui.runClasses(BoardTest.class));

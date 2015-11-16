@@ -15,7 +15,7 @@ class HumanPlayer extends Player {
 
     @Override
     Move makeMove() {
-        return null;  // REPLACE WITH IMPLEMENTATION
+        return getGame().getMove();
     }
 
     // OTHER METHODS AND FIELDS HERE.
