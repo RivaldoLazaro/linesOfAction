@@ -6,34 +6,40 @@ import static loa.Board.*;
 import static loa.Direction.*;
 import static loa.Piece.*;
 
-/** A move in Lines of Action.
- *  @author P. N. Hilfinger */
+/**
+ * A move in Lines of Action.
+ * 
+ * @author P. N. Hilfinger
+ */
 class Move {
 
-    /* Implementation note: We create moves by means of static "factory
-     * methods" all named create, which in turn use the single (private)
-     * constructor.  There is a unique Move for each combination of arguments.
-     * As a result the default equality operation (same as ==) will
-     * work. */
+    /*
+     * Implementation note: We create moves by means of static "factory methods"
+     * all named create, which in turn use the single (private) constructor.
+     * There is a unique Move for each combination of arguments. As a result the
+     * default equality operation (same as ==) will work.
+     */
 
-    /** Return a move on BOARD denoted by a prefix of S (after trimming),
-     *  or null if S denotes no valid move. */
+    /**
+     * Return a move on BOARD denoted by a prefix of S (after trimming), or null
+     * if S denotes no valid move.
+     */
     static Move create(String s, Board board) {
         s = s.trim();
         if (s.matches("[a-h][1-9]-[a-h][1-9]\\b.*")) {
             String p1 = s.substring(0, 2);
             String p2 = s.substring(3, 5);
-            return create(board.col(p1), board.row(p1),
-                          board.col(p2), board.row(p2), board);
+            return create(board.col(p1), board.row(p1), board.col(p2), board.row(p2), board);
         } else {
             return null;
         }
     }
 
-    /** Return a move of the piece at COLUMN0, ROW0 to COLUMN1, ROW1, on
-     *  BOARD or null if this move is always invalid. */
-    static Move create(int column0, int row0, int column1, int row1,
-                       Board board) {
+    /**
+     * Return a move of the piece at COLUMN0, ROW0 to COLUMN1, ROW1, on BOARD or
+     * null if this move is always invalid.
+     */
+    static Move create(int column0, int row0, int column1, int row1, Board board) {
         if (!inBounds(column0, row0) || !inBounds(column1, row1)) {
             return null;
         }
@@ -46,30 +52,45 @@ class Move {
         return _moves[column0][row0][column1][row1][moved][replaced];
     }
 
-    /** Return a K step move from (COLUMN0, ROW0) in the direction DIR on
-     *  BOARD. */
-    static Move create(int column0, int row0, int k, Direction dir,
-                       Board board) {
-        return create(column0, row0, column0 + dir.dc * k, row0 + dir.dr * k,
-                      board);
+    /**
+     * Return a K step move from (COLUMN0, ROW0) in the direction DIR on BOARD.
+     */
+    static Move create(int column0, int row0, int k, Direction dir, Board board) {
+        return create(column0, row0, column0 + dir.dc * k, row0 + dir.dr * k, board);
     }
 
-    /** A new Move of the piece at COL0, ROW0 to COL1, ROW1. MOVED is the
-     *  piece being moved from COL0, ROW0, and REPLACED is the piece (or EMP)
-     *  that it replaces. */
-    Move(int col0, int row0, int col1, int row1,
-                 Piece moved, Piece replaced) {
-        assert 1 <= col0 && col0 <= M && 1 <= row0 && row0 <= M
-            && 1 <= col1 && col1 <= M && 1 <= row1 && row1 <= M
-            && (col0 == col1 || row0 == row1 || col0 + row0 == col1 + row1
-                || col0 - row0 == col1 - row1)
-            && moved != EMP && moved != null && replaced != null;
+    /**
+     * A new Move of the piece at COL0, ROW0 to COL1, ROW1. MOVED is the piece
+     * being moved from COL0, ROW0, and REPLACED is the piece (or EMP) that it
+     * replaces.
+     */
+    Move(int col0, int row0, int col1, int row1, Piece moved, Piece replaced) {
+        assert 1 <= col0 && col0 <= M && 1 <= row0 && row0 <= M && 1 <= col1 && col1 <= M
+                && 1 <= row1 && row1 <= M
+                && (col0 == col1 || row0 == row1 || col0 + row0 == col1 + row1
+                        || col0 - row0 == col1 - row1)
+                && moved != EMP && moved != null && replaced != null;
         _col0 = col0;
         _row0 = row0;
         _col1 = col1;
         _row1 = row1;
         _moved = moved;
         _replaced = replaced;
+    }
+
+    int value(Board b) {
+
+        if (_value == null) {
+            b.makeMove(this);
+            _value = MachinePlayer.eval(b);
+            b.retract();
+        }
+        return _value;
+    }
+
+    int value() {
+        assert(_value != null);
+        return _value;
     }
 
     /** Return the column at which this move starts, as an index in 1--8. */
@@ -97,8 +118,9 @@ class Move {
         return _moved;
     }
 
-    /** Return the piece on BOARD that is replaced by THIS (or EMP
-     *  if none). */
+    /**
+     * Return the piece on BOARD that is replaced by THIS (or EMP if none).
+     */
     Piece replacedPiece() {
         return _replaced;
     }
@@ -107,33 +129,43 @@ class Move {
     int length() {
         return Math.max(Math.abs(_row1 - _row0), Math.abs(_col1 - _col0));
     }
-    
+
+    // /** Return the eval as a result of taking this step on board */
+    // static int value(Board board, Move mv) {
+    // assert(board.isLegal(mv));
+    // Board b = new Board(board);
+    // b.makeMove(mv);
+    // return MachinePlayer.eval(b);
+    // }
+
     /** Return the direction of move. */
     Direction dir() {
-    	Integer Col1 = new Integer(getCol1());
+        Integer Col1 = new Integer(getCol1());
         Integer Row1 = new Integer(getRow1());
-        
-        for(Direction dir : Direction.values()) {
-        	if(Col1.compareTo(getCol0()) == dir.dc &&
-        			Row1.compareTo(getRow0()) == dir.dr) {
-        		return dir;
-        	}	
+
+        for (Direction dir : Direction.values()) {
+            if (Col1.compareTo(getCol0()) == dir.dc && Row1.compareTo(getRow0()) == dir.dr) {
+                return dir;
+            }
         }
         return NOWHERE;
     }
 
-    /** Return true IFF (C, R) denotes a square on the board, that is if
-     *  1 <= C <= M, 1 <= R <= M. */
+    /**
+     * Return true IFF (C, R) denotes a square on the board, that is if 1 <= C
+     * <= M, 1 <= R <= M.
+     */
     private static boolean inBounds(int c, int r) {
         return 1 <= c && c <= M && 1 <= r && r <= M;
     }
 
     @Override
     public String toString() {
-        return String.format("%c%d-%c%d", (char) (_col0 - 1 + 'a'), _row0,
-                             (char) (_col1 - 1 + 'a'), _row1);
+        return String.format("%c%d-%c%d", (char) (_col0 - 1 + 'a'), _row0, (char) (_col1 - 1 + 'a'),
+                _row1);
     }
 
+    Integer _value = null;
     /** Column and row numbers of starting and ending points. */
     private final int _col0, _row0, _col1, _row1;
     /** Piece moved. */
@@ -141,10 +173,11 @@ class Move {
     /** Piece replaced. */
     private final Piece _replaced;
 
-    /** The set of all possible Moves, indexed by row and column of
-     *  start, row and column of destination, piece moved and piece replaced. */
-    private static Move[][][][][][] _moves =
-        new Move[M + 1][M + 1][M + 1][M + 1][2][3];
+    /**
+     * The set of all possible Moves, indexed by row and column of start, row
+     * and column of destination, piece moved and piece replaced.
+     */
+    private static Move[][][][][][] _moves = new Move[M + 1][M + 1][M + 1][M + 1][2][3];
 
     static {
         for (int m = 0; m <= 1; m += 1) {
@@ -157,21 +190,17 @@ class Move {
                     for (int c0 = 1; c0 <= M; c0 += 1) {
                         for (int k = 1; k <= M; k += 1) {
                             if (k != r0) {
-                                _moves[c0][r0][c0][k][m][r] =
-                                    new Move(c0, r0, c0, k, pm, pr);
+                                _moves[c0][r0][c0][k][m][r] = new Move(c0, r0, c0, k, pm, pr);
                                 if ((char) (c0 - r0 + k - 1) < M) {
-                                    _moves[c0][r0][c0 - r0 + k][k][m][r]
-                                        = new Move(c0, r0, c0 - r0 + k, k,
-                                                   pm, pr);
+                                    _moves[c0][r0][c0 - r0 + k][k][m][r] = new Move(c0, r0,
+                                            c0 - r0 + k, k, pm, pr);
                                 }
                             }
                             if (k != c0) {
-                                _moves[c0][r0][k][r0][m][r] =
-                                    new Move(c0, r0, k, r0, pm, pr);
+                                _moves[c0][r0][k][r0][m][r] = new Move(c0, r0, k, r0, pm, pr);
                                 if ((char) (c0 + r0 - k - 1) < M) {
-                                    _moves[c0][r0][k][c0 + r0 - k][m][r]
-                                        = new Move(c0, r0, k, c0 + r0 - k,
-                                                   pm, pr);
+                                    _moves[c0][r0][k][c0 + r0 - k][m][r] = new Move(c0, r0, k,
+                                            c0 + r0 - k, pm, pr);
                                 }
                             }
                         }

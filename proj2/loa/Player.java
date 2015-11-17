@@ -4,8 +4,10 @@ package loa;
 
 import static loa.Piece.*;
 
-/** Represents a player.  Extensions of this class do the actual playing.
- *  @author P. N. Hilfinger
+/**
+ * Represents a player. Extensions of this class do the actual playing.
+ * 
+ * @author P. N. Hilfinger
  */
 public abstract class Player {
 
@@ -15,9 +17,11 @@ public abstract class Player {
         _game = game;
     }
 
-    /** Return my next move from the current position in getBoard(), assuming
-     *  that side() == getBoard.turn().  Returns null only if an intervening
-     *  command stops play. */
+    /**
+     * Return my next move from the current position in getBoard(), assuming
+     * that side() == getBoard.turn(). Returns null only if an intervening
+     * command stops play.
+     */
     abstract Move makeMove();
 
     /** Return which side I'm playing. */
