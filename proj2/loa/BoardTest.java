@@ -14,6 +14,8 @@ import static loa.Piece.EMP;
 import static loa.Piece.WP;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 public class BoardTest {
@@ -300,9 +302,9 @@ public class BoardTest {
 	public void testPieceCountAlong() {
 		
 		Board b1 = new Board();
-		Move v = new Move(4, 1, 4, 3, EMP, EMP);
+		Move v = new Move(4, 1, 4, 3, BP, EMP);
 		assertEquals(2, b1.pieceCountAlong(v));
-		Move v2 = new Move(1, 2, 3, 2, EMP, EMP);
+		Move v2 = new Move(1, 2, 3, 2, BP, EMP);
 		assertEquals(2, b1.pieceCountAlong(v2));
 		
 		Piece[][] p = {
@@ -317,23 +319,23 @@ public class BoardTest {
 			};
 		
 		Board b2 = new Board(p, BP);
-		v = new Move(1, 2, 3, 4, EMP, EMP);
+		v = new Move(1, 2, 3, 4, BP, EMP);
 		assertEquals(4, b2.pieceCountAlong(v));
-		v = new Move(2, 7, 4, 5, EMP, EMP);
+		v = new Move(2, 7, 4, 5, BP, EMP);
 		assertEquals(3, b2.pieceCountAlong(v));
-		v = new Move(8, 8, 1, 1, EMP, EMP);
+		v = new Move(8, 8, 1, 1, BP, EMP);
 		assertEquals(6, b2.pieceCountAlong(v));
-		v = new Move(4, 6, 7, 3, EMP, EMP);
+		v = new Move(4, 6, 7, 3, BP, EMP);
 		assertEquals(3, b2.pieceCountAlong(v));
-		v = new Move(5, 2, 8, 5, EMP, EMP);
+		v = new Move(5, 2, 8, 5, BP, EMP);
 		assertEquals(3, b2.pieceCountAlong(v));
-		v = new Move(1, 4, 5, 8, EMP, EMP);
+		v = new Move(1, 4, 5, 8, BP, EMP);
 		assertEquals(3, b2.pieceCountAlong(v));
-		v = new Move(3, 8, 7, 4, EMP, EMP);
+		v = new Move(3, 8, 7, 4, BP, EMP);
 		assertEquals(2, b2.pieceCountAlong(v));
-		v = new Move(5, 4, 6, 3, EMP, EMP);
+		v = new Move(5, 4, 6, 3, BP, EMP);
 		assertEquals(3, b2.pieceCountAlong(v));
-		v = new Move(4, 3, 2, 1, EMP, EMP);
+		v = new Move(4, 3, 2, 1, BP, EMP);
 		assertEquals(2, b2.pieceCountAlong(v));
 	}
 	
@@ -509,7 +511,6 @@ public class BoardTest {
 		
 		
 		Board b = new Board(p, BP);
-		System.out.println(b);
 		assertEquals(false, b.isLegal(Move.create("a3-e3", b)));
 		assertEquals(true, b.isLegal(Move.create("h4-c4", b)));
 		assertEquals(true, b.isLegal(Move.create("a8-d5", b)));
@@ -518,6 +519,107 @@ public class BoardTest {
 		b = new Board(p, WP);
 		assertEquals(true, b.isLegal(Move.create("a3-e3", b)));
 		assertEquals(true, b.isLegal(Move.create("e1-e5", b)));
+	}
+	
+	@Test
+	public void testIncr() {
+
+		Piece[][] p = {
+		        { WP, BP,  BP,  BP,  WP,  BP,  BP,  WP },
+		        { WP, EMP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP, WP, WP,  EMP, EMP, EMP, EMP, WP  },
+		        { WP, WP, WP, BP,  EMP, EMP, EMP, BP  },
+		        { WP, EMP, WP, EMP, BP, EMP, EMP, BP  },
+		        { BP, BP,	BP, EMP, EMP, BP,  EMP, WP  },
+		        { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP  },
+		        { BP, BP,  BP,  WP,  BP,  BP,  WP,  WP }
+			};
+		Board b = new Board(p, BP);
+		int i = 0;
+		for(Move m : b) {
+			i++;
+		}
+		assertEquals(25, i);
+		
+		Board b2 = new Board();
+		int j = 0;
+		for(Move m : b2) {
+			j++;
+		}
+		assertEquals(36, j);
+	}
+	
+	@Test
+	public void testPiecesDiscontiguity() {
+
+		Piece[][] p = {
+		        { WP,  BP,  BP,  WP,  BP,  BP,  BP,  WP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { EMP, EMP, WP,  WP,  EMP, WP,  EMP, EMP },
+		        { WP,  WP, 	WP,  WP,  WP,  WP,  WP,  WP },
+		        { EMP, EMP, EMP, WP,  WP,  EMP, EMP, EMP },
+		        { EMP, EMP, WP , WP,  EMP, WP,  EMP, EMP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { WP,  EMP, EMP, WP,  EMP, EMP, EMP, WP }
+			};
+		Board b = new Board(p, BP);
+		ArrayList<int[]> crsL = b.piecesDiscontiguity(WP);
+		ArrayList<int[]> crsLb = b.piecesDiscontiguity(BP);
+		assertEquals(1, crsL.size());
+		assertEquals(2, crsLb.size());
+		
+		Piece[][] p2 = {
+				{ WP,  BP,  BP,  WP,  BP,  BP,  BP,  WP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { EMP, EMP, WP,  BP,  EMP, WP,  EMP, EMP },
+		        { WP,  WP, 	BP,  EMP,  WP,  WP,  WP,  WP },
+		        { EMP, EMP, EMP, WP,  WP,  EMP, EMP, EMP },
+		        { EMP, EMP, WP , WP,  EMP, WP,  EMP, EMP },
+		        { EMP, WP,  EMP, WP,  EMP, EMP, WP,  EMP },
+		        { WP,  EMP, EMP, WP,  EMP, EMP, EMP, WP }
+			};
+		Board b2 = new Board(p2, BP);
+		ArrayList<int[]> crsL2 = b2.piecesDiscontiguity(WP);
+		ArrayList<int[]> crsL2b = b2.piecesDiscontiguity(BP);
+		assertEquals(2, crsL2.size());
+		assertEquals(3, crsL2b.size());
+		
+		Piece[][] p3 = {
+		        { EMP, BP,  BP,  BP,  WP,  BP,  BP,  EMP },
+		        { WP,  EMP, EMP, WP, EMP, WP, EMP, WP  },
+		        { WP,  EMP, WP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  WP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  EMP, WP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  WP, EMP, EMP, EMP, WP, EMP, WP  },
+		        { WP,  EMP, EMP, EMP, EMP, EMP, WP, WP  },
+		        { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
+		    };
+		Board b3 = new Board(p3, WP);
+		ArrayList<int[]> crsL3 = b3.piecesDiscontiguity(WP);
+		ArrayList<int[]> crsL3b = b3.piecesDiscontiguity(BP);
+		assertEquals(1, crsL3.size());
+		assertEquals(3, crsL3b.size());
+		
+		Piece[][] p4 = {
+		        { EMP, BP,  BP,  BP,  WP,  BP,  BP,  EMP },
+		        { WP,  EMP, EMP, WP, EMP, WP, EMP, WP  },
+		        { WP,  EMP, WP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  WP, EMP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  EMP, WP, EMP, WP, EMP, EMP, WP  },
+		        { WP,  WP, EMP, EMP, EMP, WP, EMP, WP  },
+		        { WP,  EMP, EMP, WP, EMP, EMP, WP, WP  },
+		        { EMP, BP,  BP,  BP,  BP,  BP,  BP,  EMP }
+		    };
+		Board b4 = new Board(p4, WP);
+		System.out.println(b4);
+		ArrayList<int[]> crsL4 = b4.piecesDiscontiguity(WP);
+		ArrayList<int[]> crsL4b = b4.piecesDiscontiguity(BP);
+		System.out.println("WP: " + crsL4.size());
+		System.out.println("BP: " + crsL4b.size());
+		for(int[] i : crsL4) {
+			System.out.println("c: " + i[0] + " r: " + i[1] + " size: " + i[2]);
+
+		}
 	}
 	
 	public static void main(String... args) {

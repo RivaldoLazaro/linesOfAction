@@ -1,5 +1,5 @@
 # Check that some simple moves entered by hand work.  The AI is never started.
-staff-loa
+java -ea loa.Main
 None
 ===#1===
 manual White

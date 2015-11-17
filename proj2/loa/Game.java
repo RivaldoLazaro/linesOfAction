@@ -121,7 +121,7 @@ class Game {
                 int c = command.group(2).toLowerCase().charAt(0)-'a' + 1;
                 int r = command.group(2).charAt(1)-'0';
                 try{
-                	_board.set(c, r, setValueOf(command.group(3).toLowerCase()));
+                	_board.set(c, r, setValueOf(command.group(3).toLowerCase()), setValueOf(command.group(3).toLowerCase()).opposite());
                 } catch(IllegalArgumentException e) {
                 	System.err.println(e.getMessage());
                 }
@@ -211,6 +211,11 @@ class Game {
             if (next != null) {
                 assert _board.isLegal(next);
                 _board.makeMove(next);
+                if(next.movedPiece() == WP && _players[1] instanceof MachinePlayer) {
+                	System.out.println("W::" + next.toString());
+                } else if(next.movedPiece() == BP && _players[0] instanceof MachinePlayer) {
+                	System.out.println("B::" + next.toString());
+                }
                 if (_board.gameOver()) {
                     announceWinner();
                     _playing = false;
@@ -238,8 +243,7 @@ class Game {
     void help() {
     	
     	System.out.println("Commands: Commands are whitespace-delimited.  Other trailing text on a line\n" + 
-          "is ignored. Comment lines begin with # and are ignored.\n");    
-    	
+          "is ignored. Comment lines begin with # and are ignored.\n");
     	       
     	System.out.printf("%-10s%s" , "start", "Start playing from the current position.\n");
     	System.out.printf("%-10s%s" , "stop", "Stop game (pause).\n");

@@ -1,5 +1,5 @@
 # Have the program play against itself.  Make sure somebody wins.
-java -ea loa.Main 
+staff-loa
 None
 ===#1===
 auto Black

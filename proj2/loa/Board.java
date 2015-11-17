@@ -224,18 +224,19 @@ class Board implements Iterable<Move> {
     boolean gameOver() {
         return piecesContiguous(BP) || piecesContiguous(WP);
     }
-
-    /** Return true iff SIDE's pieces are continguous. */
-    boolean piecesContiguous(Piece side) {
+    
+    
+    
+    
+    /** Return a 8x8 array if side present, make 1 else 0. */
+    private int[][] mapOne(Piece side, int[] loc) {
     	int[][] sidePieceOnly = new int[M][M];
-    	int c0 = 0;
-    	int r0 = 0;
     	for(int c = 1; c <= M; c++) {
     		for(int r = 1; r <= M; r++) {
     			if(get(c, r) == side) {
-    				if(c0 == 0 && r0 == 0) {
-    					c0 = c;
-    					r0 = r;
+    				if(loc != null && loc[0] == 0 && loc[1] == 0) {
+    					loc[0] = c;
+    					loc[1] = r;
     				}
     				sidePieceOnly[r - 1][c - 1] = 1;
     			} else {
@@ -243,27 +244,99 @@ class Board implements Iterable<Move> {
     			}
     		}
     	}
-    	
-    	sidePieceOnly = markOff(sidePieceOnly, c0, r0);
-    	
+    	return sidePieceOnly;
+    }
+    
+    private int[] nextChunk(int[][] onesMap) {
+    	int[] loc = new int[2];
     	for(int c = 1; c <= M; c++) {
     		for(int r = 1; r <= M; r++) {
-    			if(sidePieceOnly[r - 1][c - 1] == 1) {
-    				return false;
-    			}
+    			if(onesMap[r - 1][c - 1] == 1) {
+    				loc[0] = c;
+    				loc[1] = r;
+    				return loc;
+    			}	
     		}
+    	}
+    	return null;
+    }
+    
+    /** return chunk average location : [avg_c, avg_r, size]. and mark it off */
+    private int[] chunkCentre(int[][] onesMap, int c, int r) {
+    	int[] result = new int[]{0, 0, 0};
+    	ArrayList<int[]> cr = new ArrayList<int[]>();
+    	markOff(onesMap, c, r, cr);
+    	for(int[] a : cr) {
+    		result[0] += a[0];
+    		result[1] += a[1];
+    		result[2]++;
+    	}
+    	result[0] = (int)Math.floor(result[0] / result[2] );
+    	result[1] = (int)Math.floor(result[1] / result[2] );
+    	return result;
+    }
+   
+    private static void markOff(int[][] i, int c, int r, ArrayList<int[]> cr) {
+    	i[r - 1][c - 1] = 0;
+    	if(cr != null) {
+    		cr.add(new int[]{c, r});
+    	}
+    	for(Direction dir : Direction.values()) {
+    		if(inBound(c + dir.dc, r + dir.dr) && i[r + dir.dr - 1][c + dir.dc - 1] == 1) {
+    			markOff(i, c + dir.dc, r + dir.dr, cr);
+        	}		
+    	}
+	}
+    
+
+    /** Return an arrayList of average location of each chunk and size of a chunk {{c0, c0, s0}, {c1, r1, s1}, ...}*/
+    ArrayList<int[]> piecesDiscontiguity(Piece side) {
+    	ArrayList<int[]> result = new ArrayList<int[]>();
+    	int[][] sidePieceOnly = this.mapOne(side, null);
+    	int[] loc;
+    	while(true) {
+    		loc = nextChunk(sidePieceOnly);
+    		if(loc == null) {
+    			break;
+    		}
+    		result.add(this.chunkCentre(sidePieceOnly, loc[0], loc[1]));	
+    	}
+    	return result;
+    }
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /** Return true iff SIDE's pieces are continguous. */
+    boolean piecesContiguous(Piece side) {
+    	int[][] sidePieceOnly = new int[M][M];
+    	int[] loc = new int[2];
+    	sidePieceOnly = this.mapOne(side, loc);
+    	int c0 = loc[0];
+    	int r0 = loc[1];
+    	markOff(sidePieceOnly, c0, r0);
+    	
+    	if(nextChunk(sidePieceOnly) != null) {
+    		return false;
     	}
         return true;
     }
 
-    private static int[][] markOff(int[][] i, int c, int r) {
-    	i[r - 1][c - 1] = 0;
-    	for(Direction dir : Direction.values()) {
-    		if(inBound(c + dir.dc, r + dir.dr) && i[r + dir.dr - 1][c + dir.dc - 1] == 1) {
-    			i = markOff(i, c + dir.dc, r + dir.dr);
-        	}		
-    	}
-		return i;
+    private static void markOff(int[][] i, int c, int r) {
+    	markOff(i, c, r, null);
 	}
 
 	private static boolean inBound(int c, int r) {
@@ -539,7 +612,7 @@ class Board implements Iterable<Move> {
 
         /** A new move iterator for turn(). */
         MoveIterator() {
-            _c = 1; _r = 1; _dir = NOWHERE;
+            _c = 1; _r = 1; _dir = N;
             incr();
         }
 
@@ -565,7 +638,26 @@ class Board implements Iterable<Move> {
 
         /** Advance to the next legal move. */
         private void incr() {
-            // FIXME
+        	Board b = Board.this;
+        	Move m;
+            while(_c <= M){
+            	while(_r <= M) {
+            		while(_dir != null) {
+            			m = Move.create(_c, _r, pieceCountAlong(_c, _r, _dir), _dir, b);
+            			if(isLegal(m)) {
+            				_move = m;
+                			_dir = _dir.succ();
+                			return;
+            			}
+            			_dir = _dir.succ();
+            		}
+            		_dir = N;
+            		_r++;
+            	}
+            	_r = 1;
+            	_c++;
+            }
+            _move = null;
         }
     }
 

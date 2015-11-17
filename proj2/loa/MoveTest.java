@@ -13,34 +13,34 @@ public class MoveTest {
 	@Test
 	public void testDir() {
 
-		Move v = new Move(1, 2, 3, 4, EMP, EMP);
+		Move v = new Move(1, 2, 3, 4, WP, EMP);
 		assertEquals(NE, v.dir());
 		
-		v = new Move(3, 3, 3, 4, EMP, EMP);
+		v = new Move(3, 3, 3, 4, WP, EMP);
 		assertEquals(N, v.dir());
 		
-		v = new Move(3, 3, 4, 4, EMP, EMP);
+		v = new Move(3, 3, 4, 4, WP, EMP);
 		assertEquals(NE, v.dir());
 		
-		v = new Move(3, 3, 4, 3, EMP, EMP);
+		v = new Move(3, 3, 4, 3, WP, EMP);
 		assertEquals(E, v.dir());
 		
-		v = new Move(3, 3, 4, 2, EMP, EMP);
+		v = new Move(3, 3, 4, 2, WP, EMP);
 		assertEquals(SE, v.dir());
 		
-		v = new Move(3, 3, 3, 2, EMP, EMP);
+		v = new Move(3, 3, 3, 2, WP, EMP);
 		assertEquals(S, v.dir());
 		
-		v = new Move(3, 3, 2, 2, EMP, EMP);
+		v = new Move(3, 3, 2, 2, WP, EMP);
 		assertEquals(SW, v.dir());
 		
-		v = new Move(3, 3, 2, 3, EMP, EMP);
+		v = new Move(3, 3, 2, 3, WP, EMP);
 		assertEquals(W, v.dir());
 		
-		v = new Move(3, 3, 2, 4, EMP, EMP);
+		v = new Move(3, 3, 2, 4, WP, EMP);
 		assertEquals(NW, v.dir());
 		
-		v = new Move(3, 3, 3, 3, EMP, EMP);
+		v = new Move(3, 3, 3, 3, WP, EMP);
 		assertEquals(NOWHERE, v.dir());
 		
 		
