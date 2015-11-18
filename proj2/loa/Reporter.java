@@ -1,5 +1,3 @@
-// Remove all comments that begin with //, and replace appropriately.
-// Feel free to modify ANYTHING in this file.
 package loa;
 
 /** Utility for reporting informational or debugging messages conditionally,

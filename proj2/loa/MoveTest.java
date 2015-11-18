@@ -46,10 +46,14 @@ public class MoveTest {
 
     @Test
     public void testValue() {
-        Piece[][] p = { { WP, BP, BP, WP, BP, BP, BP, WP }, { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
-                { EMP, EMP, WP, WP, EMP, WP, EMP, EMP }, { WP, WP, WP, WP, WP, WP, WP, WP },
-                { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP }, { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
-                { EMP, WP, EMP, WP, EMP, EMP, WP, EMP }, { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
+        Piece[][] p = { { WP, BP, BP, WP, BP, BP, BP, WP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { WP, WP, WP, WP, WP, WP, WP, WP },
+            { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
         Board b = new Board(p, BP);
         System.out.println(b);
         for (Move mv : b) {

@@ -1,5 +1,3 @@
-// Remove all comments that begin with //, and replace appropriately.
-// Feel free to modify ANYTHING in this file.
 package loa;
 
 import java.io.BufferedReader;
@@ -73,13 +71,13 @@ class Game {
 
     /** Print a prompt for a move. */
     private void prompt() {
-    	if(_playing) {
-    		System.out.print(_board.turn().abbrev() + "> ");
-    		System.out.flush();
-    	} else {
-    		System.out.print("-> ");
-    		System.out.flush();
-    	}
+        if (_playing) {
+            System.out.print(_board.turn().abbrev() + "> ");
+            System.out.flush();
+        } else {
+            System.out.print("-> ");
+            System.out.flush();
+        }
     }
 
     /** Describes a command with up to two arguments. */
@@ -109,47 +107,37 @@ class Game {
             case "start":
                 _playing = true;
                 return true;
-            case "stop":
-                _playing = false;
-                return true;
             case "clear":
                 _playing = false;
                 _board.clear();
                 return true;
             case "set":
                 _playing = false;
-                int c = command.group(2).toLowerCase().charAt(0)-'a' + 1;
-                int r = command.group(2).charAt(1)-'0';
-                try{
-                	_board.set(c, r, setValueOf(command.group(3).toLowerCase()), setValueOf(command.group(3).toLowerCase()).opposite());
-                } catch(IllegalArgumentException e) {
-                	System.err.println(e.getMessage());
+                int c = command.group(2).toLowerCase().charAt(0) - 'a' + 1;
+                int r = command.group(2).charAt(1) - '0';
+                try {
+                    _board.set(c, r, setValueOf(command.group(3).toLowerCase()),
+                            setValueOf(command.group(3).
+                                    toLowerCase()).opposite());
+                } catch (IllegalArgumentException e) {
+                    System.err.println(e.getMessage());
                 }
                 return true;
-            case "retract":
-            	_playing = false;
-            	_board.retract();
-            	return true;
             case "dump":
                 System.out.println(_board);
                 return true;
-            case "quit": case "q":
+            case "quit":
                 quit();
-            case "help": case "?":
+                return true;
+            case "q":
+                quit();
+                return true;
+            case "help":
                 help();
                 return true;
-            case "wpwin" :
-            	_board.clear(Board.WIN_BOARD, WP);
-            	return true;
-            case "bpwin" :
-            	_board.clear(Board.WIN_BOARD, BP);
-            	return true;
-            case "wtie" :
-            	_board.clear(Board.TIE_BOARD, WP);
-            	return true;
-            case "btie" :
-            	_board.clear(Board.TIE_BOARD, BP);
-            	return true;
+            case "?":
+                help();
+                return true;
             default:
                 return false;
             }
@@ -211,10 +199,12 @@ class Game {
             if (next != null) {
                 assert _board.isLegal(next);
                 _board.makeMove(next);
-                if(next.movedPiece() == WP && _players[1] instanceof MachinePlayer) {
-                	System.out.println("W::" + next.toString());
-                } else if(next.movedPiece() == BP && _players[0] instanceof MachinePlayer) {
-                	System.out.println("B::" + next.toString());
+                if (next.movedPiece() == WP
+                        && _players[1] instanceof MachinePlayer) {
+                    System.out.println("W::" + next.toString());
+                } else if (next.movedPiece() == BP
+                        && _players[0] instanceof MachinePlayer) {
+                    System.out.println("B::" + next.toString());
                 }
                 if (_board.gameOver()) {
                     announceWinner();
@@ -226,11 +216,11 @@ class Game {
 
     /** Print an announcement of the winner. */
     private void announceWinner() {
-    	if(_board.turn() == WP) {
-    		System.out.println("Black wins.");
-    	} else if (_board.turn() == BP) {
-    		System.out.println("White wins.");
-    	}
+        if (_board.turn() == WP) {
+            System.out.println("Black wins.");
+        } else if (_board.turn() == BP) {
+            System.out.println("White wins.");
+        }
     }
 
     /** Return an integer r, 0 <= r < N, randomly chosen from a
@@ -241,23 +231,32 @@ class Game {
 
     /** Print a help message. */
     void help() {
-    	
-    	System.out.println("Commands: Commands are whitespace-delimited.  Other trailing text on a line\n" + 
-          "is ignored. Comment lines begin with # and are ignored.\n");
-    	       
-    	System.out.printf("%-10s%s" , "start", "Start playing from the current position.\n");
-    	System.out.printf("%-10s%s" , "stop", "Stop game (pause).\n");
-    	System.out.printf("%-10s%s" , "clear", "Stop game and reset to initial position.\n");
-        System.out.printf("%-10s%s" , "uv-xy", "A move from square uv to square xy.  Here u and v are column\n");
-    	System.out.printf("%-10s%s" , "", "designations (a-h) and v and y are row designations (1-8).\n");
-    	System.out.printf("%-10s%s" , "auto P", "Stops game. P is white or black; makes P into an AI.\n");
-    	System.out.printf("%-10s%s" , "manual P", "Stops game. P is white or black; takes moves for P from terminal.\n");
-    	System.out.printf("%-10s%s" , "set cr P", "Stops game. Then put P ('w', 'b', or 'e') into square cr.\n");
-    	System.out.printf("%-10s%s" , "dumb", "Display the board in standard format.\n");
-    	System.out.printf("%-10s%s" , "q", "\n");
-    	System.out.printf("%-10s%s" , "quit", "End program.\n");
-    	System.out.printf("%-10s%s" , "help", "\n");
-    	System.out.printf("%-10s%s" , "?", "This text.\n");
+        System.out.println("Commands: Commands are "
+                + "whitespace-delimited.  Other trailing "
+                + "text on a line\n"
+                + "is ignored. Comment lines begin with # and are "
+                + "ignored.\n");
+        System.out.printf("%-10s%s" , "start", "Start "
+                + "playing from the current position.\n");
+        System.out.printf("%-10s%s" , "stop", "Stop game (pause).\n");
+        System.out.printf("%-10s%s" , "clear", "Stop game "
+                + "and reset to initial position.\n");
+        System.out.printf("%-10s%s" , "uv-xy", "A move from "
+                + "square uv to square xy.  Here u and v are column\n");
+        System.out.printf("%-10s%s" , "", "designations (a-h) "
+                + "and v and y are row designations (1-8).\n");
+        System.out.printf("%-10s%s" , "auto P", "Stops game. "
+                + "P is white or black; makes P into an AI.\n");
+        System.out.printf("%-10s%s" , "manual P", "Stops game. "
+                + "P is white or black; takes moves for P from terminal.\n");
+        System.out.printf("%-10s%s" , "set cr P", "Stops game. "
+                + "Then put P ('w', 'b', or 'e') into square cr.\n");
+        System.out.printf("%-10s%s" , "dumb",
+                "Display the board in standard format.\n");
+        System.out.printf("%-10s%s" , "q", "\n");
+        System.out.printf("%-10s%s" , "quit", "End program.\n");
+        System.out.printf("%-10s%s" , "help", "\n");
+        System.out.printf("%-10s%s" , "?", "This text.\n");
     }
 
     /** The official game board. */

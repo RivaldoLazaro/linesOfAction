@@ -1,12 +1,10 @@
-// Remove all comments that begin with //, and replace appropriately.
-// Feel free to modify ANYTHING in this file.
 package loa;
 
 import static loa.Piece.*;
 
 /**
  * Represents a player. Extensions of this class do the actual playing.
- * 
+ *
  * @author P. N. Hilfinger
  */
 public abstract class Player {

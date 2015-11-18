@@ -1,5 +1,3 @@
-// Remove all comments that begin with //, and replace appropriately.
-// Feel free to modify ANYTHING in this file.
 package loa;
 
 import java.util.ArrayList;
@@ -11,12 +9,11 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 import static loa.Piece.*;
-import static loa.Board.M;
 import static loa.Direction.*;
 
 /**
  * Represents the state of a game of Lines of Action.
- * 
+ *
  * @author Tim Chan
  */
 class Board implements Iterable<Move> {
@@ -56,16 +53,14 @@ class Board implements Iterable<Move> {
     void initialize(Piece[][] contents, Piece side) {
         _moves.clear();
 
-        // TK:
         _board = new Piece[M][M];
-        // TK.
 
         for (int r = 1; r <= M; r += 1) {
             for (int c = 1; c <= M; c += 1) {
-                set(c, r, contents[r - 1][c - 1]); // TK
+                set(c, r, contents[r - 1][c - 1]);
             }
         }
-        // recount();
+
         makeZobristTable();
         _turn = side;
     }
@@ -89,7 +84,14 @@ class Board implements Iterable<Move> {
         initialize(INITIAL_PIECES, BP);
     }
 
-    /** Set me to the desired configuration. */
+    /**
+     * Set me to the desired configuration.
+     *
+     * @param b
+     *            Board config
+     * @param p
+     *            Pieces
+     */
     void clear(Piece[][] b, Piece p) {
         initialize(b, p);
     }
@@ -102,13 +104,12 @@ class Board implements Iterable<Move> {
         _moves.clear();
         _moves.addAll(board._moves);
         _turn = board._turn;
-        // TK:
+
         for (int r = 1; r <= M; r += 1) {
             for (int c = 1; c <= M; c += 1) {
                 set(c, r, board.get(c, r));
             }
         }
-        // TK.
     }
 
     /**
@@ -116,7 +117,7 @@ class Board implements Iterable<Move> {
      * 1 corresponds to column 'a' in the standard notation.
      */
     Piece get(int c, int r) {
-        return _board[r - 1][c - 1]; // TK.
+        return _board[r - 1][c - 1];
 
     }
 
@@ -157,12 +158,11 @@ class Board implements Iterable<Move> {
      */
     void set(int c, int r, Piece v, Piece next) {
 
-        // TK:
         if (!inBound(c, r)) {
-            throw new IllegalArgumentException("Error: invalid location to set: ");
+            throw new
+                IllegalArgumentException("Error: invalid location to set: ");
         }
         _board[r - 1][c - 1] = v;
-        // TK.
 
         if (next != null) {
             _turn = next;
@@ -249,7 +249,14 @@ class Board implements Iterable<Move> {
         }
     }
 
-    /** Return a 8x8 array if side present, make 1 else 0. */
+    /**
+     * Return a 8x8 array if side present, make 1 else 0.
+     *
+     * @param side
+     *            which side
+     * @param loc
+     *            location
+     */
     private int[][] mapOne(Piece side, int[] loc) {
         int[][] sidePieceOnly = new int[M][M];
         for (int c = 1; c <= M; c++) {
@@ -268,6 +275,11 @@ class Board implements Iterable<Move> {
         return sidePieceOnly;
     }
 
+    /**
+     * Return the location of a cluster, or null.
+     *
+     * @param onesMap map of ones
+     */
     private int[] nextChunk(int[][] onesMap) {
         int[] loc = new int[2];
         for (int c = 1; c <= M; c++) {
@@ -282,7 +294,16 @@ class Board implements Iterable<Move> {
         return null;
     }
 
-    /** return chunk average location : [avg_c, avg_r, size]. and mark it off */
+    /**
+     * return chunk average location : [avg_c, avg_r, size]. and mark it off.
+     *
+     * @param onesMap
+     *            map of ones.
+     * @param c
+     *            col
+     * @param r
+     *            row
+     */
     private int[] chunkCentre(int[][] onesMap, int c, int r) {
         int[] result = new int[] { 0, 0, 0 };
         ArrayList<int[]> cr = new ArrayList<int[]>();
@@ -297,20 +318,35 @@ class Board implements Iterable<Move> {
         return result;
     }
 
+    /**
+     * mark off a SINGL ones cluster in map start at c, r.
+     *
+     * @param i
+     *            map of ones.
+     * @param c
+     *            col
+     * @param r
+     *            row
+     * @param cr
+     *            i dont remember what it's for
+     */
     private static void markOff(int[][] i, int c, int r, ArrayList<int[]> cr) {
         i[r - 1][c - 1] = 0;
         if (cr != null) {
             cr.add(new int[] { c, r });
         }
         for (Direction dir : Direction.values()) {
-            if (inBound(c + dir.dc, r + dir.dr) && i[r + dir.dr - 1][c + dir.dc - 1] == 1) {
+            if (inBound(c + dir.dc, r + dir.dr)
+                    && i[r + dir.dr - 1][c + dir.dc - 1] == 1) {
                 markOff(i, c + dir.dc, r + dir.dr, cr);
             }
         }
     }
 
     /**
-     * Return an arrayList of average location of each chunk and size of a chunk
+     * Return an arrayList of average location .
+     * of each chunk and size of a chunk
+     * @param side side
      * {{c0, c0, s0}, {c1, r1, s1}, ...}
      */
     ArrayList<int[]> piecesDiscontiguity(Piece side) {
@@ -342,10 +378,22 @@ class Board implements Iterable<Move> {
         return true;
     }
 
+    /**
+     * Mark off ones.
+     * @param i board config
+     * @param c  col
+     * @param r  row
+     */
     private static void markOff(int[][] i, int c, int r) {
         markOff(i, c, r, null);
     }
 
+    /** Check if inBound.
+     *
+     * @param c col
+     * @param r row
+     * @return boolean
+     * */
     private static boolean inBound(int c, int r) {
         return 1 <= c && c <= M && 1 <= r && r <= M;
     }
@@ -363,7 +411,7 @@ class Board implements Iterable<Move> {
     @Override
     public boolean equals(Object obj) {
         Board b = (Board) obj;
-        // TK:
+
         if (this.turn() != b.turn()) {
             return false;
         }
@@ -375,12 +423,12 @@ class Board implements Iterable<Move> {
             }
         }
         return true;
-        // TK.
+
     }
 
     @Override
     public int hashCode() {
-        // TK:
+
         int result = 0;
         for (int c = 1; c <= M; c++) {
             for (int r = 1; r <= M; r++) {
@@ -398,7 +446,7 @@ class Board implements Iterable<Move> {
             result = result ^ _turnHash[1];
         }
         return result;
-        // TK.
+
     }
 
     @Override
@@ -416,21 +464,9 @@ class Board implements Iterable<Move> {
         return out.toString();
     }
 
-    // FUNCTION MIGHT NEEDED!!! NOT FINISHED.
-    /**
-     * Recount the Number of pieces. in every direction at [r - 1][c - 1][-, |,
-     * \, /]
-     */
-    void recount() {
-        for (int c = 1; c <= M; c++) {
-            for (int r = 1; r <= M; r++) {
-                _piecesCount[r - 1][c - 1][0] = rowCount(r);
-                _piecesCount[r - 1][c - 1][1] = colCount(c);
-            }
-        }
-    }
-
-    /** Recount the Number of pieces at col C: 1 <= C <= M. */
+    /** Recount the Number of pieces at col C: 1 <= C <= M.
+     * @param c col
+     * @return int*/
     int colCount(int c) {
         int result = 0;
         for (int r = 0; r < M; r++) {
@@ -441,7 +477,9 @@ class Board implements Iterable<Move> {
         return result;
     }
 
-    /** Recount the Number of pieces at row R: 1 <= R <= M. */
+    /** Recount the Number of pieces at row R: 1 <= R <= M.
+     * @param r row
+     * @return int */
     int rowCount(int r) {
         int result = 0;
         for (int c = 0; c < M; c++) {
@@ -455,6 +493,9 @@ class Board implements Iterable<Move> {
     /**
      * Recount the Number of pieces along major diagonal (+ve slope) C: 1 <= C
      * <= M; R: 1 <= R <= M.
+     * @param c col
+     * @param r row
+     * @return int
      */
     int majDiaCount(int c, int r) {
         int c2 = c;
@@ -465,7 +506,7 @@ class Board implements Iterable<Move> {
                 result++;
             }
             c++;
-            r++; // _baord is upside down from real world.
+            r++;
         }
         if (c2 >= 1 && r2 >= 1) {
             r2--;
@@ -476,7 +517,7 @@ class Board implements Iterable<Move> {
                 result++;
             }
             c2--;
-            r2--; // _baord is upside down from real world.
+            r2--;
         }
         return result;
     }
@@ -484,6 +525,10 @@ class Board implements Iterable<Move> {
     /**
      * Recount the Number of pieces along minor diagonal (-ve slope) C: 1 <= C
      * <= M; R: 1 <= R <= M.
+     * @param c col
+     * @param r row
+     * @return int
+     *
      */
     int minDiaCount(int c, int r) {
         int c2 = c;
@@ -494,7 +539,7 @@ class Board implements Iterable<Move> {
                 result++;
             }
             c--;
-            r++; // _baord is upside down from real world.
+            r++;
         }
         if (c2 >= 1 && r2 >= 1) {
             r2--;
@@ -505,16 +550,16 @@ class Board implements Iterable<Move> {
                 result++;
             }
             c2++;
-            r2--; // _baord is upside down from real world.
+            r2--;
         }
         return result;
     }
 
     /** Return the number of pieces in the line of action indicated by MOVE. */
     int pieceCountAlong(Move move) {
-        // TK:
+
         return pieceCountAlong(move.getCol0(), move.getRow0(), move.dir());
-        // TK.
+
     }
 
     /**
@@ -522,7 +567,7 @@ class Board implements Iterable<Move> {
      * containing the square at column C and row R.
      */
     int pieceCountAlong(int c, int r, Direction dir) {
-        // TK:
+
         switch (dir) {
         case N:
         case S:
@@ -539,7 +584,7 @@ class Board implements Iterable<Move> {
         default:
             return 0;
         }
-        // TK.
+
     }
 
     /**
@@ -547,7 +592,7 @@ class Board implements Iterable<Move> {
      * piece on the target square.
      */
     boolean blocked(Move move) {
-        // TK:
+
         int ci = move.getCol0();
         int ri = move.getRow0();
         int cf = move.getCol1();
@@ -568,31 +613,44 @@ class Board implements Iterable<Move> {
                 }
             }
         }
-        // TK.
+
         return false;
     }
 
     /** The standard initial configuration for Lines of Action. */
-    static final Piece[][] INITIAL_PIECES = { { EMP, BP, BP, BP, BP, BP, BP, EMP },
-            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+    static final Piece[][] INITIAL_PIECES =
+        { { EMP, BP, BP, BP, BP, BP, BP, EMP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
             { EMP, BP, BP, BP, BP, BP, BP, EMP } };
 
-    /** Grid for testing winning cases */
-    static final Piece[][] WIN_BOARD = { { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP }, { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP }, { EMP, EMP, EMP, EMP, WP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP }, { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+    /** Grid for testing winning cases. */
+    static final Piece[][] WIN_BOARD =
+        { { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, WP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
             { EMP, BP, EMP, EMP, WP, BP, EMP, EMP } };
 
-    /** Grid for testing tie cases */
-    static final Piece[][] TIE_BOARD = { { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP }, { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP }, { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
-            { EMP, EMP, EMP, EMP, WP, EMP, EMP, EMP }, { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+    /** Grid for testing tie cases. */
+    static final Piece[][] TIE_BOARD =
+        { { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, WP, EMP, EMP, EMP },
+            { EMP, EMP, EMP, EMP, EMP, EMP, EMP, EMP },
             { EMP, EMP, BP, EMP, BP, WP, EMP, EMP } };
 
+    /** Return the last move. */
     Move lastMove() {
         return _moves.get(_moves.size() - 1);
     }
@@ -605,12 +663,11 @@ class Board implements Iterable<Move> {
     private Piece[][] _board = new Piece[M][M];
     /** Seed for Zobrist Keys. */
     private final int _zobristSeed = 820329520;
-    /** Random key for Zobrist table. [r - 1][c - 1][WP, BP] */
+    /** Random key for Zobrist table. [r - 1][c - 1][WP, BP]. */
     private final int[][][] _zobristTable = new int[M][M][2];
-    /** Random key for generating hash code (turn) */
+    /** Random key for generating hash code (turn). */
     private final int[] _turnHash = new int[2];
-    /** Number of pieces in every direction at [r - 1][c - 1][-, |, \, /] */
-    private int[][][] _piecesCount = new int[8][8][4];
+    /** Number of pieces in every direction at [r - 1][c - 1][-, |, \, /]. */
 
     /** An iterator returning the legal moves from the current board. */
     private class MoveIterator implements Iterator<Move> {
@@ -656,7 +713,8 @@ class Board implements Iterable<Move> {
             while (_c <= M) {
                 while (_r <= M) {
                     while (_dir != null) {
-                        m = Move.create(_c, _r, pieceCountAlong(_c, _r, _dir), _dir, b);
+                        m = Move.create(_c,
+                                _r, pieceCountAlong(_c, _r, _dir), _dir, b);
                         if (isLegal(m)) {
                             _move = m;
                             _dir = _dir.succ();

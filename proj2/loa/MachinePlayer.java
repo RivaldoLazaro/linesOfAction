@@ -1,5 +1,3 @@
-// Remove all comments that begin with //, and replace appropriately.
-// Feel free to modify ANYTHING in this file.
 package loa;
 
 import static loa.Piece.BP;
@@ -10,19 +8,19 @@ import java.util.ArrayList;
 
 /**
  * An automated Player.
- * 
+ *
  * @author Tim Chan
  */
 class MachinePlayer extends Player {
 
-    final static int WON_GAME = Integer.MAX_VALUE;
-    final static int LOST_GAME = Integer.MIN_VALUE;
-    /** Dummy really bad move */
+    /** Dummy really bad move. */
+    static final int WON_GAME = Integer.MAX_VALUE;
+    /** Dummy really bad move. */
+    static final int LOST_GAME = Integer.MIN_VALUE;
 
     /** A MachinePlayer that plays the SIDE pieces in GAME. */
     MachinePlayer(Piece side, Game game) {
         super(side, game);
-        // FILL IN
     }
 
     @Override
@@ -31,38 +29,46 @@ class MachinePlayer extends Player {
         Move mv = guessBestMove(getBoard().turn(), getBoard());
 
         if (getBoard().turn() == WP) {
-            mv = findBestMove(getBoard().turn(), getBoard(), 3, 10);
+            mv = findBestMove(getBoard().turn(), getBoard(), 2, 10);
         } else {
-            mv = findBestMove(getBoard().turn(), getBoard(), 3, -10);
+            mv = findBestMove(getBoard().turn(), getBoard(), 2, -10);
         }
 
         return mv;
     }
 
+    /** Return the last move.
+     * @param p piece
+     * @param board board
+     * @param depth depth
+     * @param cutoff cutoff
+     * @return Move
+     * */
     Move findBestMove(Piece p, Board board, int depth, int cutoff) {
-
-        if (board.gameOverP() == p)
+        if (board.gameOverP() == p) {
             return board.lastMove();
-
-        if (depth == 0)
+        }
+        if (depth == 0) {
             return guessBestMove(p, board);
+        }
 
         Move v = new Move(1, 1, 1, 1, BP, EMP);
-        v._value = LOST_GAME;
-        Move bestSoFar = v; // a very bad move.
+        v.setValue(LOST_GAME);
+        Move bestSoFar = v;
 
         for (Move mv : board) {
             board.makeMove(mv);
 
-            Move response = findBestMove(board.turn(), board, depth - 1, -bestSoFar.value());
+            Move response = findBestMove(board.turn(), board,
+                    depth - 1, -bestSoFar.value());
 
             if (-response.value(board) > bestSoFar.value()) {
-
                 bestSoFar = mv;
-                bestSoFar._value = -response.value();
+                bestSoFar.setValue(-response.value());
                 board.retract();
-                if (bestSoFar.value() >= cutoff)
+                if (bestSoFar.value() >= cutoff) {
                     break;
+                }
             } else {
                 board.retract();
             }
@@ -71,13 +77,18 @@ class MachinePlayer extends Player {
         return bestSoFar;
     }
 
+    /** Guess best move.
+     *
+     * @param p piece
+     * @param b board
+     * @return Move
+     */
     Move guessBestMove(Piece p, Board b) {
         Move best = null;
         boolean init = true;
         int bestness = 0;
         Board board = b;
-        assert(b.turn() == p);
-        // Piece turn = board.turn();
+        assert (b.turn() == p);
         if (p == WP) {
             for (Move m : board) {
                 board.makeMove(m);
@@ -124,6 +135,7 @@ class MachinePlayer extends Player {
      * L_k, with cluster size S_k: bpSum = sum((||C - L_k||)^2 / S_k) Notice,
      * the bigger the no. the more spread wpSum = sum((||C - L_k||)^2 / S_k) so
      * we do bpSum - wpSum bpSum - wpSum
+     * @param board board
      */
     public static int eval(Board board) {
 
@@ -159,12 +171,18 @@ class MachinePlayer extends Player {
         return bpSum - wpSum;
     }
 
-    /** pSum = sum((||C - L_k||)^2 / S_k) */
+    /**pSum = sum((||C - L_k||)^2 / S_k).
+     *
+     * @param c col
+     * @param r row
+     * @param s size
+     * @return
+     */
     public static int pSum(int[] c, int[] r, int[] s) {
         int size = c.length;
-        // assert(size != 0);
-        if (size == 0)
+        if (size == 0) {
             return WON_GAME;
+        }
         double result = 0;
         int[] centreLoc = new int[] { 0, 0 };
         for (int i = 0; i < size; i++) {
@@ -173,16 +191,22 @@ class MachinePlayer extends Player {
         }
         centreLoc[0] = (int) Math.floor(centreLoc[0] / size);
         centreLoc[1] = (int) Math.floor(centreLoc[1] / size);
-        int Cc = centreLoc[0];
-        int Cr = centreLoc[1];
+        int cc = centreLoc[0];
+        int cr = centreLoc[1];
         for (int i = 0; i < size; i++) {
-            result += distanceSquared(Cc, Cr, c[i], r[i]) / s[i];
+            result += distanceSquared(cc, cr, c[i], r[i]) / s[i];
         }
-        return (int) Math.floor(result * 100) + 1; // +1 in case anything weird
-                                                   // happen.
+        return (int) Math.floor(result * 100) + 1;
     }
 
-    /** Distance squared between 2pts. */
+    /** Distance squared between 2pts.
+     *
+     * @param c0 col
+     * @param r0 row
+     * @param c1 col
+     * @param r1 row
+     * @return double
+     */
     public static double distanceSquared(int c0, int r0, int c1, int r1) {
         return (c0 - c1) * (c0 - c1) + (r0 - r1) * (r0 - r1);
     }

@@ -1,5 +1,3 @@
-// Remove all comments that begin with //, and replace appropriately.
-// Feel free to modify ANYTHING in this file.
 package loa;
 
 import static loa.Board.*;
@@ -8,7 +6,7 @@ import static loa.Piece.*;
 
 /**
  * A move in Lines of Action.
- * 
+ *
  * @author P. N. Hilfinger
  */
 class Move {
@@ -29,17 +27,20 @@ class Move {
         if (s.matches("[a-h][1-9]-[a-h][1-9]\\b.*")) {
             String p1 = s.substring(0, 2);
             String p2 = s.substring(3, 5);
-            return create(board.col(p1), board.row(p1), board.col(p2), board.row(p2), board);
+            return create(board.col(p1), board.row(p1), board.col(p2),
+                    board.row(p2), board);
         } else {
             return null;
         }
     }
 
     /**
-     * Return a move of the piece at COLUMN0, ROW0 to COLUMN1, ROW1, on BOARD or
+     * Return a move of the piece at COLUMN0, ROW0 to COLUMN1, ROW1,
+     * on BOARD or
      * null if this move is always invalid.
      */
-    static Move create(int column0, int row0, int column1, int row1, Board board) {
+    static Move create(int column0, int row0, int column1, int row1,
+            Board board) {
         if (!inBounds(column0, row0) || !inBounds(column1, row1)) {
             return null;
         }
@@ -53,19 +54,30 @@ class Move {
     }
 
     /**
-     * Return a K step move from (COLUMN0, ROW0) in the direction DIR on BOARD.
+     * Return a K step move from (COLUMN0, ROW0) in the
+     * direction DIR on BOARD.
      */
-    static Move create(int column0, int row0, int k, Direction dir, Board board) {
-        return create(column0, row0, column0 + dir.dc * k, row0 + dir.dr * k, board);
+    static Move create(int column0, int row0, int k, Direction dir,
+            Board board) {
+        return create(column0, row0, column0 + dir.dc * k,
+                row0 + dir.dr * k, board);
     }
 
-    /**
-     * A new Move of the piece at COL0, ROW0 to COL1, ROW1. MOVED is the piece
+
+    /**A new Move of the piece at COL0, ROW0 to COL1, ROW1. MOVED is the piece.
      * being moved from COL0, ROW0, and REPLACED is the piece (or EMP) that it
      * replaces.
+     *
+     * @param col0 col
+     * @param row0 row
+     * @param col1 col
+     * @param row1 row
+     * @param moved moved
+     * @param replaced replaced
      */
     Move(int col0, int row0, int col1, int row1, Piece moved, Piece replaced) {
-        assert 1 <= col0 && col0 <= M && 1 <= row0 && row0 <= M && 1 <= col1 && col1 <= M
+        assert 1 <= col0 && col0 <= M && 1 <= row0 && row0 <= M
+                && 1 <= col1 && col1 <= M
                 && 1 <= row1 && row1 <= M
                 && (col0 == col1 || row0 == row1 || col0 + row0 == col1 + row1
                         || col0 - row0 == col1 - row1)
@@ -78,6 +90,10 @@ class Move {
         _replaced = replaced;
     }
 
+    /** Return value of board after that move.
+     * @param b board
+     * @return int
+     */
     int value(Board b) {
 
         if (_value == null) {
@@ -88,8 +104,9 @@ class Move {
         return _value;
     }
 
+    /** return value. */
     int value() {
-        assert(_value != null);
+        assert (_value != null);
         return _value;
     }
 
@@ -130,25 +147,32 @@ class Move {
         return Math.max(Math.abs(_row1 - _row0), Math.abs(_col1 - _col0));
     }
 
-    // /** Return the eval as a result of taking this step on board */
-    // static int value(Board board, Move mv) {
-    // assert(board.isLegal(mv));
-    // Board b = new Board(board);
-    // b.makeMove(mv);
-    // return MachinePlayer.eval(b);
-    // }
-
     /** Return the direction of move. */
     Direction dir() {
-        Integer Col1 = new Integer(getCol1());
-        Integer Row1 = new Integer(getRow1());
+        Integer col1 = new Integer(getCol1());
+        Integer row1 = new Integer(getRow1());
 
         for (Direction dir : Direction.values()) {
-            if (Col1.compareTo(getCol0()) == dir.dc && Row1.compareTo(getRow0()) == dir.dr) {
+            if (col1.compareTo(getCol0()) == dir.dc
+                    && row1.compareTo(getRow0()) == dir.dr) {
                 return dir;
             }
         }
         return NOWHERE;
+    }
+
+    /** setter for _value.
+     * @param i i
+     */
+    public void setValue(int i) {
+        _value = i;
+    }
+
+    /** getter for _value.
+     * @return  int
+     */
+    public int getValue() {
+        return _value;
     }
 
     /**
@@ -161,11 +185,13 @@ class Move {
 
     @Override
     public String toString() {
-        return String.format("%c%d-%c%d", (char) (_col0 - 1 + 'a'), _row0, (char) (_col1 - 1 + 'a'),
+        return String.format("%c%d-%c%d", (char) (_col0 - 1 + 'a'),
+                _row0, (char) (_col1 - 1 + 'a'),
                 _row1);
     }
 
-    Integer _value = null;
+    /** Score of move. */
+    private Integer _value = null;
     /** Column and row numbers of starting and ending points. */
     private final int _col0, _row0, _col1, _row1;
     /** Piece moved. */
@@ -177,12 +203,14 @@ class Move {
      * The set of all possible Moves, indexed by row and column of start, row
      * and column of destination, piece moved and piece replaced.
      */
-    private static Move[][][][][][] _moves = new Move[M + 1][M + 1][M + 1][M + 1][2][3];
+    private static Move[][][][][][] _moves =
+            new Move[M + 1][M + 1][M + 1][M + 1][2][3];
 
     static {
         for (int m = 0; m <= 1; m += 1) {
             for (int r = 0; r <= 2; r += 1) {
-                Piece pm = Piece.values()[m], pr = Piece.values()[r];
+                Piece pm = Piece.values()[m],
+                        pr = Piece.values()[r];
                 if (pm == pr || pm == EMP) {
                     continue;
                 }
@@ -190,16 +218,20 @@ class Move {
                     for (int c0 = 1; c0 <= M; c0 += 1) {
                         for (int k = 1; k <= M; k += 1) {
                             if (k != r0) {
-                                _moves[c0][r0][c0][k][m][r] = new Move(c0, r0, c0, k, pm, pr);
+                                _moves[c0][r0][c0][k][m][r] =
+                                        new Move(c0, r0, c0, k, pm, pr);
                                 if ((char) (c0 - r0 + k - 1) < M) {
-                                    _moves[c0][r0][c0 - r0 + k][k][m][r] = new Move(c0, r0,
+                                    _moves[c0][r0][c0 - r0 + k][k][m][r] =
+                                            new Move(c0, r0,
                                             c0 - r0 + k, k, pm, pr);
                                 }
                             }
                             if (k != c0) {
-                                _moves[c0][r0][k][r0][m][r] = new Move(c0, r0, k, r0, pm, pr);
+                                _moves[c0][r0][k][r0][m][r] =
+                                        new Move(c0, r0, k, r0, pm, pr);
                                 if ((char) (c0 + r0 - k - 1) < M) {
-                                    _moves[c0][r0][k][c0 + r0 - k][m][r] = new Move(c0, r0, k,
+                                    _moves[c0][r0][k][c0 + r0 - k][m][r] =
+                                            new Move(c0, r0, k,
                                             c0 + r0 - k, pm, pr);
                                 }
                             }

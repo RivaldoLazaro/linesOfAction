@@ -1,14 +1,5 @@
 package loa;
 
-import static loa.Direction.E;
-import static loa.Direction.N;
-import static loa.Direction.NE;
-import static loa.Direction.NOWHERE;
-import static loa.Direction.NW;
-import static loa.Direction.S;
-import static loa.Direction.SE;
-import static loa.Direction.SW;
-import static loa.Direction.W;
 import static loa.Piece.BP;
 import static loa.Piece.EMP;
 import static loa.Piece.WP;
@@ -41,22 +32,31 @@ public class BoardTest {
     public void testEquals() {
 
         Piece[][] p1 = { { EMP, BP, BP, BP, BP, BP, BP, EMP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, EMP, EMP, BP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, BP, EMP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, BP, EMP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
 
         Piece[][] p2 = { { EMP, BP, BP, BP, BP, BP, BP, EMP },
-                { WP, WP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, EMP, EMP, BP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, BP, EMP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, WP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, BP, EMP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
 
         Piece[][] p3 = { { EMP, BP, BP, BP, BP, BP, BP, EMP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, WP, EMP, EMP, EMP, EMP, WP },
-                { WP, EMP, EMP, BP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, BP, EMP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, BP, EMP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
 
         Board a = new Board(p1, WP);
         Board b = new Board(p2, WP);
@@ -84,25 +84,33 @@ public class BoardTest {
     public void testSet() {
 
         Piece[][] p1 = { { EMP, BP, BP, BP, BP, BP, BP, EMP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, EMP, EMP, BP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, BP, EMP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, BP, EMP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
 
         Piece[][] p2 = { { EMP, BP, BP, BP, BP, BP, BP, EMP },
-                { WP, WP, EMP, EMP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, EMP, EMP, BP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, BP, EMP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, WP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, BP, EMP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
 
         Piece[][] p3 = { { EMP, BP, BP, BP, BP, BP, BP, EMP },
-                { WP, EMP, EMP, EMP, WP, EMP, EMP, WP }, { WP, EMP, WP, EMP, EMP, EMP, EMP, WP },
-                { WP, EMP, EMP, BP, EMP, EMP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { WP, BP, EMP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, EMP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { WP, BP, EMP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
 
         Board a = new Board(p1, WP);
-
         Board b = new Board(p2, WP);
         Board bt = new Board(a);
         bt.set(2, 2, WP);
@@ -124,13 +132,10 @@ public class BoardTest {
 
         assertEquals(false, a.equals(bt));
         assertEquals(false, bt.equals(ct));
-
         assertEquals(true, b.equals(bt));
         assertEquals(true, c.equals(ct));
-
         assertEquals(true, b2.equals(b2t));
         assertEquals(true, c2.equals(c2t));
-
         assertEquals(false, bt.equals(b2t));
         assertEquals(false, ct.equals(c2t));
     }
@@ -187,13 +192,14 @@ public class BoardTest {
     public void testMajDiaCount() {
 
         Board b = new Board();
-        int[][] majDiaCount = new int[][] { { 0, 2, 2, 2, 2, 2, 2, 0 }, // notice
-                                                                        // it's
-                                                                        // upside
-                                                                        // down
-                { 2, 0, 2, 2, 2, 2, 2, 2 }, { 2, 2, 0, 2, 2, 2, 2, 2 }, { 2, 2, 2, 0, 2, 2, 2, 2 },
-                { 2, 2, 2, 2, 0, 2, 2, 2 }, { 2, 2, 2, 2, 2, 0, 2, 2 }, { 2, 2, 2, 2, 2, 2, 0, 2 },
-                { 0, 2, 2, 2, 2, 2, 2, 0 } };
+        int[][] majDiaCount = new int[][] { { 0, 2, 2, 2, 2, 2, 2, 0 },
+            { 2, 0, 2, 2, 2, 2, 2, 2 },
+            { 2, 2, 0, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 0, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 0, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 0, 2, 2 },
+            { 2, 2, 2, 2, 2, 2, 0, 2 },
+            { 0, 2, 2, 2, 2, 2, 2, 0 } };
         for (int c = 1; c <= Board.M; c++) {
             for (int r = 1; r <= Board.M; r++) {
                 assertEquals(majDiaCount[r - 1][c - 1], b.majDiaCount(c, r));
@@ -209,13 +215,14 @@ public class BoardTest {
         c.set(6, 8, EMP);
         c.set(7, 4, BP);
         c.set(8, 7, EMP);
-        int[][] majDiaCount2 = new int[][] { { 1, 1, 3, 2, 2, 2, 2, 0 }, // notice
-                                                                         // it's
-                                                                         // upside
-                                                                         // down
-                { 2, 1, 1, 3, 2, 2, 2, 2 }, { 1, 2, 1, 1, 3, 2, 2, 2 }, { 3, 1, 2, 1, 1, 3, 2, 2 },
-                { 2, 3, 1, 2, 1, 1, 3, 2 }, { 2, 2, 3, 1, 2, 1, 1, 3 }, { 2, 2, 2, 3, 1, 2, 1, 1 },
-                { 0, 2, 2, 2, 3, 1, 2, 1 } };
+        int[][] majDiaCount2 = new int[][] { { 1, 1, 3, 2, 2, 2, 2, 0 },
+            { 2, 1, 1, 3, 2, 2, 2, 2 },
+            { 1, 2, 1, 1, 3, 2, 2, 2 },
+            { 3, 1, 2, 1, 1, 3, 2, 2 },
+            { 2, 3, 1, 2, 1, 1, 3, 2 },
+            { 2, 2, 3, 1, 2, 1, 1, 3 },
+            { 2, 2, 2, 3, 1, 2, 1, 1 },
+            { 0, 2, 2, 2, 3, 1, 2, 1 } };
         for (int c2 = 1; c2 <= Board.M; c2++) {
             for (int r = 1; r <= Board.M; r++) {
                 assertEquals(majDiaCount2[r - 1][c2 - 1], c.majDiaCount(c2, r));
@@ -227,13 +234,14 @@ public class BoardTest {
     public void testMinDiaCount() {
 
         Board b = new Board();
-        int[][] minDiaCount = new int[][] { { 0, 2, 2, 2, 2, 2, 2, 0 }, // notice
-                                                                        // it's
-                                                                        // upside
-                                                                        // down
-                { 2, 2, 2, 2, 2, 2, 0, 2 }, { 2, 2, 2, 2, 2, 0, 2, 2 }, { 2, 2, 2, 2, 0, 2, 2, 2 },
-                { 2, 2, 2, 0, 2, 2, 2, 2 }, { 2, 2, 0, 2, 2, 2, 2, 2 }, { 2, 0, 2, 2, 2, 2, 2, 2 },
-                { 0, 2, 2, 2, 2, 2, 2, 0 } };
+        int[][] minDiaCount = new int[][] { { 0, 2, 2, 2, 2, 2, 2, 0 },
+            { 2, 2, 2, 2, 2, 2, 0, 2 },
+            { 2, 2, 2, 2, 2, 0, 2, 2 },
+            { 2, 2, 2, 2, 0, 2, 2, 2 },
+            { 2, 2, 2, 0, 2, 2, 2, 2 },
+            { 2, 2, 0, 2, 2, 2, 2, 2 },
+            { 2, 0, 2, 2, 2, 2, 2, 2 },
+            { 0, 2, 2, 2, 2, 2, 2, 0 } };
         for (int c = 1; c <= Board.M; c++) {
             for (int r = 1; r <= Board.M; r++) {
                 assertEquals(minDiaCount[r - 1][c - 1], b.minDiaCount(c, r));
@@ -249,13 +257,14 @@ public class BoardTest {
         c.set(6, 8, EMP);
         c.set(7, 4, BP);
         c.set(8, 7, EMP);
-        int[][] minDiaCount2 = new int[][] { { 0, 2, 3, 1, 2, 2, 3, 1 }, // notice
-                                                                         // it's
-                                                                         // upside
-                                                                         // down
-                { 2, 3, 1, 2, 2, 3, 1, 2 }, { 3, 1, 2, 2, 3, 1, 2, 3 }, { 1, 2, 2, 3, 1, 2, 3, 2 },
-                { 2, 2, 3, 1, 2, 3, 2, 2 }, { 2, 3, 1, 2, 3, 2, 2, 1 }, { 3, 1, 2, 3, 2, 2, 1, 1 },
-                { 1, 2, 3, 2, 2, 1, 1, 0 } };
+        int[][] minDiaCount2 = new int[][] { { 0, 2, 3, 1, 2, 2, 3, 1 },
+            { 2, 3, 1, 2, 2, 3, 1, 2 },
+            { 3, 1, 2, 2, 3, 1, 2, 3 },
+            { 1, 2, 2, 3, 1, 2, 3, 2 },
+            { 2, 2, 3, 1, 2, 3, 2, 2 },
+            { 2, 3, 1, 2, 3, 2, 2, 1 },
+            { 3, 1, 2, 3, 2, 2, 1, 1 },
+            { 1, 2, 3, 2, 2, 1, 1, 0 } };
         for (int c2 = 1; c2 <= Board.M; c2++) {
             for (int r = 1; r <= Board.M; r++) {
                 assertEquals(minDiaCount2[r - 1][c2 - 1], c.minDiaCount(c2, r));
@@ -272,10 +281,14 @@ public class BoardTest {
         Move v2 = new Move(1, 2, 3, 2, BP, EMP);
         assertEquals(2, b1.pieceCountAlong(v2));
 
-        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP }, { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, WP, EMP, EMP, EMP, EMP, WP }, { WP, WP, WP, BP, EMP, EMP, EMP, BP },
-                { WP, EMP, WP, EMP, BP, EMP, EMP, BP }, { BP, BP, BP, EMP, EMP, BP, EMP, WP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { BP, BP, BP, WP, BP, BP, WP, WP } };
+        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP },
+            { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, WP, WP, BP, EMP, EMP, EMP, BP },
+            { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
+            { BP, BP, BP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { BP, BP, BP, WP, BP, BP, WP, WP } };
 
         Board b2 = new Board(p, BP);
         v = new Move(1, 2, 3, 4, BP, EMP);
@@ -301,10 +314,14 @@ public class BoardTest {
     @Test
     public void testBlocked() {
 
-        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP }, { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, WP, EMP, EMP, EMP, EMP, WP }, { WP, WP, WP, BP, EMP, EMP, EMP, BP },
-                { WP, EMP, WP, EMP, BP, EMP, EMP, BP }, { BP, BP, BP, EMP, EMP, BP, EMP, WP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { BP, BP, BP, WP, BP, BP, WP, WP } };
+        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP },
+            { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, WP, WP, BP, EMP, EMP, EMP, BP },
+            { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
+            { BP, BP, BP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { BP, BP, BP, WP, BP, BP, WP, WP } };
 
         Board b = new Board(p, BP);
 
@@ -332,11 +349,14 @@ public class BoardTest {
 
     @Test
     public void testHashCode() {
-
-        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP }, { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, WP, EMP, EMP, EMP, EMP, WP }, { WP, WP, WP, BP, EMP, EMP, EMP, BP },
-                { WP, EMP, WP, EMP, BP, EMP, EMP, BP }, { BP, BP, BP, EMP, EMP, BP, EMP, WP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { BP, BP, BP, WP, BP, BP, WP, WP } };
+        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP },
+            { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, WP, WP, BP, EMP, EMP, EMP, BP },
+            { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
+            { BP, BP, BP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { BP, BP, BP, WP, BP, BP, WP, WP } };
 
         Board b = new Board(p, BP);
         assertEquals(-1701092111, b.hashCode());
@@ -364,21 +384,26 @@ public class BoardTest {
         assertEquals(-1785467449, b2.hashCode());
 
         Piece[][] p1 = { { WP, BP, WP, BP, WP, BP, BP, EMP },
-                { EMP, EMP, EMP, EMP, WP, EMP, EMP, WP }, { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
-                { WP, WP, WP, BP, EMP, EMP, EMP, WP }, { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
-                { BP, WP, BP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, WP, EMP, EMP, EMP, EMP },
-                { EMP, BP, BP, WP, WP, BP, WP, WP } };
+            { EMP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, WP, WP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
+            { BP, WP, BP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, WP, EMP, EMP, EMP, EMP },
+            { EMP, BP, BP, WP, WP, BP, WP, WP } };
 
         Piece[][] p2 = { { WP, BP, WP, BP, WP, BP, BP, EMP },
-                { EMP, EMP, EMP, EMP, WP, EMP, EMP, WP }, { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
-                { WP, WP, WP, BP, EMP, EMP, EMP, WP }, { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
-                { BP, WP, BP, EMP, EMP, BP, EMP, WP }, { WP, EMP, EMP, WP, EMP, EMP, EMP, EMP },
-                { EMP, BP, BP, WP, WP, BP, WP, WP } };
+            { EMP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, WP, WP, BP, EMP, EMP, EMP, WP },
+            { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
+            { BP, WP, BP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, WP, EMP, EMP, EMP, EMP },
+            { EMP, BP, BP, WP, WP, BP, WP, WP } };
 
         Board a1 = new Board(p1, WP);
         Board a2 = new Board(p2, WP);
         Board a3 = new Board(p2, BP);
-
         assertEquals(a1.hashCode(), a2.hashCode());
         assertEquals(false, a3.hashCode() == a2.hashCode());
     }
@@ -386,28 +411,38 @@ public class BoardTest {
     @Test
     public void testPiecesContiguous() {
 
-        Piece[][] p = { { WP, BP, BP, WP, BP, BP, BP, WP }, { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
-                { EMP, EMP, WP, WP, EMP, WP, EMP, EMP }, { WP, WP, WP, WP, WP, WP, WP, WP },
-                { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP }, { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
-                { EMP, WP, EMP, WP, EMP, EMP, WP, EMP }, { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
+        Piece[][] p = { { WP, BP, BP, WP, BP, BP, BP, WP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { WP, WP, WP, WP, WP, WP, WP, WP },
+            { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
         Board b = new Board(p, BP);
         assertEquals(true, b.piecesContiguous(WP));
         assertEquals(false, b.piecesContiguous(BP));
 
         Piece[][] p2 = { { WP, BP, BP, WP, BP, BP, BP, WP },
-                { EMP, WP, EMP, WP, EMP, EMP, WP, EMP }, { EMP, EMP, WP, BP, EMP, WP, EMP, EMP },
-                { WP, WP, BP, EMP, WP, WP, WP, WP }, { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP },
-                { EMP, EMP, WP, WP, EMP, WP, EMP, EMP }, { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
-                { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { EMP, EMP, WP, BP, EMP, WP, EMP, EMP },
+            { WP, WP, BP, EMP, WP, WP, WP, WP },
+            { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
         Board b2 = new Board(p2, BP);
         assertEquals(false, b2.piecesContiguous(WP));
         assertEquals(false, b2.piecesContiguous(BP));
 
         Piece[][] p3 = { { EMP, BP, BP, BP, WP, BP, BP, EMP },
-                { WP, EMP, EMP, WP, EMP, WP, EMP, WP }, { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, EMP, EMP, WP, EMP, EMP, WP }, { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, EMP, EMP, EMP, WP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, WP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, EMP, EMP, WP, EMP, WP, EMP, WP },
+            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, EMP, EMP, EMP, WP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, WP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
         Board b3 = new Board(p3, WP);
         assertEquals(true, b3.piecesContiguous(WP));
         b3.set(7, 7, BP);
@@ -417,10 +452,14 @@ public class BoardTest {
     @Test
     public void testIsLegal() {
 
-        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP }, { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, WP, EMP, EMP, EMP, EMP, WP }, { WP, WP, WP, BP, EMP, EMP, EMP, BP },
-                { WP, EMP, WP, EMP, BP, EMP, EMP, BP }, { BP, BP, BP, EMP, EMP, BP, EMP, WP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { BP, BP, BP, WP, BP, BP, WP, WP } };
+        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP },
+            { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, WP, WP, BP, EMP, EMP, EMP, BP },
+            { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
+            { BP, BP, BP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { BP, BP, BP, WP, BP, BP, WP, WP } };
 
         Board b = new Board(p, BP);
         assertEquals(false, b.isLegal(Move.create("a3-e3", b)));
@@ -436,10 +475,14 @@ public class BoardTest {
     @Test
     public void testIncr() {
 
-        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP }, { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, WP, EMP, EMP, EMP, EMP, WP }, { WP, WP, WP, BP, EMP, EMP, EMP, BP },
-                { WP, EMP, WP, EMP, BP, EMP, EMP, BP }, { BP, BP, BP, EMP, EMP, BP, EMP, WP },
-                { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP }, { BP, BP, BP, WP, BP, BP, WP, WP } };
+        Piece[][] p = { { WP, BP, BP, BP, WP, BP, BP, WP },
+            { WP, EMP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, WP, EMP, EMP, EMP, EMP, WP },
+            { WP, WP, WP, BP, EMP, EMP, EMP, BP },
+            { WP, EMP, WP, EMP, BP, EMP, EMP, BP },
+            { BP, BP, BP, EMP, EMP, BP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, EMP, WP },
+            { BP, BP, BP, WP, BP, BP, WP, WP } };
         Board b = new Board(p, BP);
         int i = 0;
         for (Move m : b) {
@@ -457,11 +500,14 @@ public class BoardTest {
 
     @Test
     public void testPiecesDiscontiguity() {
-
-        Piece[][] p = { { WP, BP, BP, WP, BP, BP, BP, WP }, { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
-                { EMP, EMP, WP, WP, EMP, WP, EMP, EMP }, { WP, WP, WP, WP, WP, WP, WP, WP },
-                { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP }, { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
-                { EMP, WP, EMP, WP, EMP, EMP, WP, EMP }, { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
+        Piece[][] p = { { WP, BP, BP, WP, BP, BP, BP, WP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { WP, WP, WP, WP, WP, WP, WP, WP },
+            { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
         Board b = new Board(p, BP);
         ArrayList<int[]> crsL = b.piecesDiscontiguity(WP);
         ArrayList<int[]> crsLb = b.piecesDiscontiguity(BP);
@@ -469,21 +515,26 @@ public class BoardTest {
         assertEquals(2, crsLb.size());
 
         Piece[][] p2 = { { WP, BP, BP, WP, BP, BP, BP, WP },
-                { EMP, WP, EMP, WP, EMP, EMP, WP, EMP }, { EMP, EMP, WP, BP, EMP, WP, EMP, EMP },
-                { WP, WP, BP, EMP, WP, WP, WP, WP }, { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP },
-                { EMP, EMP, WP, WP, EMP, WP, EMP, EMP }, { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
-                { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { EMP, EMP, WP, BP, EMP, WP, EMP, EMP },
+            { WP, WP, BP, EMP, WP, WP, WP, WP },
+            { EMP, EMP, EMP, WP, WP, EMP, EMP, EMP },
+            { EMP, EMP, WP, WP, EMP, WP, EMP, EMP },
+            { EMP, WP, EMP, WP, EMP, EMP, WP, EMP },
+            { WP, EMP, EMP, WP, EMP, EMP, EMP, WP } };
         Board b2 = new Board(p2, BP);
         ArrayList<int[]> crsL2 = b2.piecesDiscontiguity(WP);
         ArrayList<int[]> crsL2b = b2.piecesDiscontiguity(BP);
         assertEquals(2, crsL2.size());
         assertEquals(3, crsL2b.size());
-
         Piece[][] p3 = { { EMP, BP, BP, BP, WP, BP, BP, EMP },
-                { WP, EMP, EMP, WP, EMP, WP, EMP, WP }, { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, EMP, EMP, WP, EMP, EMP, WP }, { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, EMP, EMP, EMP, WP, EMP, WP }, { WP, EMP, EMP, EMP, EMP, EMP, WP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, EMP, EMP, WP, EMP, WP, EMP, WP },
+            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, EMP, EMP, EMP, WP, EMP, WP },
+            { WP, EMP, EMP, EMP, EMP, EMP, WP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
         Board b3 = new Board(p3, WP);
         ArrayList<int[]> crsL3 = b3.piecesDiscontiguity(WP);
         ArrayList<int[]> crsL3b = b3.piecesDiscontiguity(BP);
@@ -491,10 +542,13 @@ public class BoardTest {
         assertEquals(3, crsL3b.size());
 
         Piece[][] p4 = { { EMP, BP, BP, BP, WP, BP, BP, EMP },
-                { WP, EMP, EMP, WP, EMP, WP, EMP, WP }, { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, EMP, EMP, WP, EMP, EMP, WP }, { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-                { WP, WP, EMP, EMP, EMP, WP, EMP, WP }, { WP, EMP, EMP, WP, EMP, EMP, WP, WP },
-                { EMP, BP, BP, BP, BP, BP, BP, EMP } };
+            { WP, EMP, EMP, WP, EMP, WP, EMP, WP },
+            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, EMP, EMP, WP, EMP, EMP, WP },
+            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
+            { WP, WP, EMP, EMP, EMP, WP, EMP, WP },
+            { WP, EMP, EMP, WP, EMP, EMP, WP, WP },
+            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
         Board b4 = new Board(p4, WP);
         System.out.println(b4);
         ArrayList<int[]> crsL4 = b4.piecesDiscontiguity(WP);
@@ -503,7 +557,6 @@ public class BoardTest {
         System.out.println("BP: " + crsL4b.size());
         for (int[] i : crsL4) {
             System.out.println("c: " + i[0] + " r: " + i[1] + " size: " + i[2]);
-
         }
     }
 
