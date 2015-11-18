@@ -29,9 +29,9 @@ class MachinePlayer extends Player {
         Move mv = guessBestMove(getBoard().turn(), getBoard());
 
         if (getBoard().turn() == WP) {
-            mv = findBestMove(getBoard().turn(), getBoard(), 2, 10);
+            mv = findBestMove(getBoard().turn(), getBoard(), 2, 1000);
         } else {
-            mv = findBestMove(getBoard().turn(), getBoard(), 2, -10);
+            mv = findBestMove(getBoard().turn(), getBoard(), 2, -1000);
         }
 
         return mv;
@@ -72,7 +72,6 @@ class MachinePlayer extends Player {
             } else {
                 board.retract();
             }
-
         }
         return bestSoFar;
     }
