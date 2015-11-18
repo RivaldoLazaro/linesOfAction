@@ -163,7 +163,6 @@ class Board implements Iterable<Move> {
                 IllegalArgumentException("Error: invalid location to set: ");
         }
         _board[r - 1][c - 1] = v;
-
         if (next != null) {
             _turn = next;
         }

@@ -1,5 +1,6 @@
 package loa;
 
+import java.util.Random;
 import static loa.Piece.BP;
 import static loa.Piece.EMP;
 import static loa.Piece.WP;
@@ -23,17 +24,38 @@ class MachinePlayer extends Player {
         super(side, game);
     }
 
+    Move pickMove(Board b) {
+        ArrayList<Move> mov = new ArrayList<Move>();
+        for (Move mv : b) {
+            mov.add(mv);
+        }
+        int i = getGame().randInt(mov.size());
+        return mov.get(i);  
+    }
+    
     @Override
     Move makeMove() {
-
+        
         Move mv = guessBestMove(getBoard().turn(), getBoard());
 
         if (getBoard().turn() == WP) {
-            mv = findBestMove(getBoard().turn(), getBoard(), 2, 1000);
+            if(getGame().randInt(50) < 45) {
+                
+                mv = findBestMove(getBoard().turn(), getBoard(), 2, 1000);
+            } else {
+                mv = pickMove(getBoard());
+            }
+            
         } else {
-            mv = findBestMove(getBoard().turn(), getBoard(), 2, -1000);
+            
+            if(getGame().randInt(50) < 45) {
+                
+                mv = findBestMove(getBoard().turn(), getBoard(), 2, -1000);
+            } else {
+                mv = pickMove(getBoard());
+            }
+            
         }
-
         return mv;
     }
 
@@ -51,7 +73,6 @@ class MachinePlayer extends Player {
         if (depth == 0) {
             return guessBestMove(p, board);
         }
-
         Move v = new Move(1, 1, 1, 1, BP, EMP);
         v.setValue(LOST_GAME);
         Move bestSoFar = v;

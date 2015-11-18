@@ -18,7 +18,7 @@ class Game {
     /** A new series of Games. */
     Game() {
         _randomSource = new Random();
-
+        _board = new Board();
         _players = new Player[2];
         _input = new BufferedReader(new InputStreamReader(System.in));
         _players[0] = new HumanPlayer(BP, this);
@@ -146,7 +146,7 @@ class Game {
     }
 
     /** Set player PLAYER ("white" or "black") to be a manual player. */
-    private void manualCommand(String player) {
+    void manualCommand(String player) {
         try {
             Piece s = Piece.playerValueOf(player);
             _playing = false;
@@ -157,11 +157,12 @@ class Game {
     }
 
     /** Set player PLAYER ("white" or "black") to be an automated player. */
-    private void autoCommand(String player) {
+    void autoCommand(String player) {
         try {
             Piece s = Piece.playerValueOf(player);
             _playing = false;
             _players[s.ordinal()] = new MachinePlayer(s, this);
+            System.out.println("player autp");
         } catch (IllegalArgumentException excp) {
             error("unknown player: %s", player);
         }
@@ -212,6 +213,27 @@ class Game {
                 }
             }
         }
+    }
+
+    /** Get the player.
+     * @param i codinal
+     * @return Player */
+    Player getPlayer(int i) {
+        assert (i == 0 || i == 1);
+        return _players[i];
+    }
+    
+    /** Get the _playing.
+     * @return Boolean */
+    Boolean getPlaying() {
+        return _playing;
+    }
+    
+    /** Set the _playing.
+     * @param s state
+     * @return Boolean */
+    void setPlaying(Boolean s) {
+        _playing = s;
     }
 
     /** Print an announcement of the winner. */
@@ -274,6 +296,6 @@ class Game {
 
     /** True if actually playing (game started and not stopped or finished).
      */
-    private boolean _playing;
+    boolean _playing;
 
 }

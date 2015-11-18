@@ -33,16 +33,19 @@ public class Main {
         }
         System.out.printf("Lines of Action.  Version %s.%nType ? for help.%n",
                           VERSION);
-
+        
+        Game game = null;
         if (options.contains("--display")) {
-            error(1, "--display not supported.");
+            game = new GuiGame();
         }
 
         if (options.contains("--debug")) {
             Reporter.setMessageLevel(options.getInt("--debug"));
         }
 
-        Game game = new Game();
+        if(game == null) {
+            game = new Game();
+        }
         game.play();
     }
 

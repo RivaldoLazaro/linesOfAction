@@ -540,24 +540,6 @@ public class BoardTest {
         ArrayList<int[]> crsL3b = b3.piecesDiscontiguity(BP);
         assertEquals(1, crsL3.size());
         assertEquals(3, crsL3b.size());
-
-        Piece[][] p4 = { { EMP, BP, BP, BP, WP, BP, BP, EMP },
-            { WP, EMP, EMP, WP, EMP, WP, EMP, WP },
-            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-            { WP, WP, EMP, EMP, WP, EMP, EMP, WP },
-            { WP, EMP, WP, EMP, WP, EMP, EMP, WP },
-            { WP, WP, EMP, EMP, EMP, WP, EMP, WP },
-            { WP, EMP, EMP, WP, EMP, EMP, WP, WP },
-            { EMP, BP, BP, BP, BP, BP, BP, EMP } };
-        Board b4 = new Board(p4, WP);
-        System.out.println(b4);
-        ArrayList<int[]> crsL4 = b4.piecesDiscontiguity(WP);
-        ArrayList<int[]> crsL4b = b4.piecesDiscontiguity(BP);
-        System.out.println("WP: " + crsL4.size());
-        System.out.println("BP: " + crsL4b.size());
-        for (int[] i : crsL4) {
-            System.out.println("c: " + i[0] + " r: " + i[1] + " size: " + i[2]);
-        }
     }
 
     public static void main(String... args) {
