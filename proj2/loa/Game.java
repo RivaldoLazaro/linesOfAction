@@ -216,22 +216,21 @@ class Game {
     }
 
     /** Get the player.
-     * @param i codinal
+     * @param i cordinal
      * @return Player */
     Player getPlayer(int i) {
         assert (i == 0 || i == 1);
         return _players[i];
     }
-    
+
     /** Get the _playing.
      * @return Boolean */
     Boolean getPlaying() {
         return _playing;
     }
-    
+
     /** Set the _playing.
-     * @param s state
-     * @return Boolean */
+     * @param s state */
     void setPlaying(Boolean s) {
         _playing = s;
     }
@@ -296,6 +295,6 @@ class Game {
 
     /** True if actually playing (game started and not stopped or finished).
      */
-    boolean _playing;
+    private boolean _playing;
 
 }

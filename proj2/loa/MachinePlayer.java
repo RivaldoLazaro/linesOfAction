@@ -1,6 +1,5 @@
 package loa;
 
-import java.util.Random;
 import static loa.Piece.BP;
 import static loa.Piece.EMP;
 import static loa.Piece.WP;
@@ -16,45 +15,55 @@ class MachinePlayer extends Player {
 
     /** Dummy really bad move. */
     static final int WON_GAME = Integer.MAX_VALUE;
+
     /** Dummy really bad move. */
     static final int LOST_GAME = Integer.MIN_VALUE;
+
+    /** Chance. */
+    static final int CHANCE = 50;
+
+    /** Cut off. */
+    static final int CUT_OFF = 1000;
+
+    /** Percentage. */
+    static final double PERC = 0.9;
 
     /** A MachinePlayer that plays the SIDE pieces in GAME. */
     MachinePlayer(Piece side, Game game) {
         super(side, game);
     }
 
+    /**
+     * Pick a random move.
+     * @param b board
+     * @return move
+     */
     Move pickMove(Board b) {
         ArrayList<Move> mov = new ArrayList<Move>();
         for (Move mv : b) {
             mov.add(mv);
         }
         int i = getGame().randInt(mov.size());
-        return mov.get(i);  
+        return mov.get(i);
     }
-    
+
     @Override
     Move makeMove() {
-        
+
         Move mv = guessBestMove(getBoard().turn(), getBoard());
 
         if (getBoard().turn() == WP) {
-            if(getGame().randInt(50) < 45) {
-                
-                mv = findBestMove(getBoard().turn(), getBoard(), 2, 1000);
+            if (getGame().randInt(CHANCE) < (PERC * CHANCE)) {
+                mv = findBestMove(getBoard().turn(), getBoard(), 2, CUT_OFF);
             } else {
                 mv = pickMove(getBoard());
             }
-            
         } else {
-            
-            if(getGame().randInt(50) < 45) {
-                
-                mv = findBestMove(getBoard().turn(), getBoard(), 2, -1000);
+            if (getGame().randInt(CHANCE) < (PERC * CHANCE)) {
+                mv = findBestMove(getBoard().turn(), getBoard(), 2, -CUT_OFF);
             } else {
                 mv = pickMove(getBoard());
             }
-            
         }
         return mv;
     }

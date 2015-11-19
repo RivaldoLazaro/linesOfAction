@@ -33,7 +33,7 @@ public class Main {
         }
         System.out.printf("Lines of Action.  Version %s.%nType ? for help.%n",
                           VERSION);
-        
+
         Game game = null;
         if (options.contains("--display")) {
             game = new GuiGame();
@@ -43,7 +43,7 @@ public class Main {
             Reporter.setMessageLevel(options.getInt("--debug"));
         }
 
-        if(game == null) {
+        if (game == null) {
             game = new Game();
         }
         game.play();
