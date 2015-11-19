@@ -211,7 +211,7 @@ class LoaGUI extends TopLevel {
     /** Action in response to mouse-moving event EVENT. */
     public synchronized void mouseMoved(MouseEvent event) {
         pressedX = event.getX();
-        if (event.getX() <= GameDisplay.BOARD_WIDTH / 2) {
+        if (event.getX() <= GameDisplay.FF_X) {
             GameDisplay.setFaceDirL();
         } else {
             GameDisplay.setFaceDirR();
