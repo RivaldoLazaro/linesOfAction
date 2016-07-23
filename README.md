@@ -56,12 +56,12 @@ Now the system is ready to run. Like always, we have CLI and GUI:
 
 CLI:
 ```sh
-$ java db61b.Main
+$ java loa.Main
 ```
 
 GUI:
 ```sh
-$ java db61b.Main --display
+$ java loa.Main --display
 ```
 
 ### 6. Class Project Site
