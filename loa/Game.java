@@ -272,7 +272,7 @@ class Game {
                 + "P is white or black; takes moves for P from terminal.\n");
         System.out.printf("%-10s%s" , "set cr P", "Stops game. "
                 + "Then put P ('w', 'b', or 'e') into square cr.\n");
-        System.out.printf("%-10s%s" , "dumb",
+        System.out.printf("%-10s%s" , "dump",
                 "Display the board in standard format.\n");
         System.out.printf("%-10s%s" , "q", "\n");
         System.out.printf("%-10s%s" , "quit", "End program.\n");
